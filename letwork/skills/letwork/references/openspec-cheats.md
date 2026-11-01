@@ -8,7 +8,7 @@
 |---|---|
 | `openspec init [path] --tools claude [--language ... --profile core\|expanded --force]` | 初始化项目 |
 | `openspec update` | 重新生成 AI 指令文件 |
-| `openspec new change <kebab-name> [--description "..." --goal "..."]` | 创建 change 脚手架 |
+| `openspec new change <kebab-name> [--description "..." --goal "..."]` | 创建 change 脚手架。**长 flag 与值之间必须有空格**（`--goal"x"` 会被 shell 拼成 `--goalx`，CLI 会建出没有 `.openspec.yaml` 的半成品目录，且重试报 already exists）；创建后立即 `ls openspec/changes/<name>/.openspec.yaml` 校验，缺失则删除空目录重建 |
 | `openspec list [--changes --archived --json]` | 列 change |
 | `openspec status --change <name> [--json]` | 产物完成度（done/ready/blocked） |
 | `openspec validate [name] [--strict --json]` | 校验（`--strict` 把 warning 也当失败） |

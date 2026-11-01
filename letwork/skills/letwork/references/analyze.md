@@ -39,6 +39,8 @@
 openspec new change <name> --description "<一句话>"
 ```
 
+**flag 与值之间永远留空格**，创建后立即确认 `.openspec.yaml` 已生成（CLI 不原子：参数粘连时可能只建空目录，重试报 already exists；此时确认无有价值内容后删除重建）。
+
 CLI 不可用时按 openspec-cheats.md 手工建目录与 `.openspec.yaml`（`schema: spec-driven`、`created: <YYYY-MM-DD>`）。同时创建私有目录 `openspec/changes/<name>/letwork/`，从 templates 复制 journal.md，写入分析开始条目。
 
 ## 3. 产出物

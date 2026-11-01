@@ -68,10 +68,12 @@ letwork 自有产物在 change 下的 `letwork/` 子目录（归档时随 change
 
 ## 验证记录（狗粮测试）
 
-- [2026-11-01 用 letwork 开发 secscan 依赖漏洞扫描器](docs/dogfood/2026-11-01-secscan.md)：全链路走通，暴露并回灌 4 项流程改进（机械化自检门禁、测试退出码纪律、勾选/记账双向核对、review 第零轴）。
+- [2026-11-01 #2 用已安装的 letwork 开发 sastscan 静态代码扫描器](docs/dogfood/2026-11-01-sastscan.md)：v0.2 四项改进全部实战生效（行长 0 返工、红测试零提交、勾选零遗漏），再回灌 3 项形成 v0.3。
+- [2026-11-01 #1 用 letwork 开发 secscan 依赖漏洞扫描器](docs/dogfood/2026-11-01-secscan.md)：全链路走通，暴露并回灌 4 项流程改进（机械化自检门禁、测试退出码纪律、勾选/记账双向核对、review 第零轴）。
 
 ## 版本与更新
 
+- **v0.3**（2026-11-01）：经 sastscan 狗粮测试回灌——脚手架 flag 空格与创建后校验提示；common.md 增加可粘贴的「机械化检查一行命令」；commit.md 固化实现/测试分开提交的推荐粒度。
 - **v0.2**（2026-11-01）：经 secscan 狗粮测试回灌——code 增加工具链预检与机械化自检；test 增加退出码纪律；commit 增加 micro-checklist 与双向核对；review 增加机械检查第零轴。
 - **v0.1**：初版；OpenSpec 速查基于 v1.16 核实（见 `skills/letwork/references/openspec-cheats.md`），OpenSpec 大版本升级后需重新核对命令与校验规则。
 - 库存规范为精简 checklist，完整手册请访问各来源链接。

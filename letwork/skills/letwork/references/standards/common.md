@@ -3,6 +3,17 @@
 规则 ID 前缀 `C-`。语言分册另有 `J-`/`G-`/`P-` 规则；冲突时语言分册优先，但安全规则（C-SEC）不可被覆盖。
 每条均可在 review 中判定「符合/违反/不适用」。
 
+## 机械化检查（每个编码任务提交前粘贴执行，零思考成本）
+
+- Python（行长阈值以 pyproject/setup.cfg 配置为准，默认 80）：
+  `python3 -m py_compile $(git diff --name-only -- '*.py') && out=$(awk 'length>80{print FILENAME":"FNR}' $(git diff --name-only -- '*.py')); [ -z "$out" ] && echo OK || echo "$out"`
+  有项目配置时改用 `ruff check .` / `flake8` / `black --check .`。
+- Go：`gofmt -l . && go vet ./... && go build ./...`（gofmt 必须无输出）。
+- Java：`mvn -q compile`（或 `./gradlew compileJava`）；配了 checkstyle/spotless 必须跑。
+- 通用：`git diff --check`（冲突标记/尾随空白）。
+
+> 判定纪律：机械检查只看退出码；测试命令重定向到文件后判 `$?` 或开 `pipefail`，禁止用管道把失败吞掉（见 test.md）。
+
 ## 命名（C-NAMING）
 
 - **C-NAMING-01【强制】** 名字表达意图（业务/技术含义），禁止 `data`、`info`、`tmp`、`a1`、`manager2` 这类空泛命名；循环短变量（i/j/k）除外。

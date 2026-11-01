@@ -2,6 +2,8 @@
 
 核心铁律：**一次提交只对应一个任务（或用户显式指定的一个简单步骤），禁止 `git add -A` / `git add .` / `git commit -a`。** 不自动 push、不自动合并。
 
+推荐提交粒度：**实现（feat/fix/refactor）与测试（test）分两次提交**，都挂同一个 `Task:` 号——回滚、review、cherry-pick 时能分开处理；一个任务跨多次提交时在 commits.md 逐行登记，双向核对按任务号聚合即可。
+
 ## 1. 提交前检查（micro-checklist，逐项确认）
 
 1. 明确本次提交对象：当前任务号（与 tasks.md、journal 对齐）或用户给的步骤说明。
