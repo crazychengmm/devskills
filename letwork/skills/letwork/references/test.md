@@ -43,3 +43,13 @@
 - 扫描器扫自身源码（预期：0 命中或仅有在 INFO 中说明的受控项）、解析器解析自身全部源文件（预期：0 解析错误）。
 - 实测价值很高：Java 版 jsecscan 的自举扫描抓到一个靶场测试发现不了的真 BLOCKER（解析器默认 Java8 语法级别，连自己用的 record 都解析不了）。
 - 自举失败按正常缺陷处理：回 code 修复 → 加回归测试 → 重跑，不允许带着「扫不了自己」的工具进入 review。
+
+## 6. 分层业务项目的测试节奏
+
+对 Spring Boot 这类分层应用（ipam 狗粮验证），采用「局部快反馈 + 提交点全量 + 一次真实冒烟」：
+
+- **局部快反馈**：开发单个类时只跑该测试（`mvn test -Dtest=XxxTest`、`go test -run`、`pytest tests/x.py`），不每次全量；
+- **提交点全量**：每个 commit 前必须跑完整 `mvn test`（绿色提交不变量，见 commit.md）；
+- **测试切片分工**：纯领域值对象用单元测试；DAO 用 H2/Testcontainers 集成测试；Controller 用 WebMvcTest 等切片测试 mock 掉 service；至少保留一个 `@SpringBootTest` 验证整体装配；
+- **真实启动冒烟**：涉及 HTTP/消息/启动配置的项目，review 前真实启动一次（fat jar + curl 走一条主链路状态码链），切片测试 mock 掉的序列化、状态码映射只有真跑才暴露。
+- **测试库与生产库方言差异要在 design.md 显式列出**：如 H2（MySQL 模式）把 `DEFAULT CURRENT_TIMESTAMP` 列也当作 generated keys，自增主键回填必须 `prepareStatement(sql, new String[]{"id"})` 显式指定键列；H2 BIGINT 与 MySQL INT UNSIGNED 的类型差异也要写明映射。

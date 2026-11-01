@@ -323,6 +323,7 @@ skills/
 
 ## 验证记录（狗粮测试）
 
+- [2026-11-01 #5 用 letwork 开发 IPAM 分层业务系统](docs/dogfood/2026-11-01-ipam.md)：首次覆盖 Spring Boot 分层 + 数据库规范（J-DDL/IDX/ORM 全参数化），jsecscan 交叉扫描 0 命中，回灌分层测试节奏形成 v0.7。
 - [2026-11-01 #4 用户实测：commit 不会做/不能选择性分批](docs/dogfood/2026-11-01-user-commit-feedback.md)：commit 规程重写为主动分批 + 绿色提交不变量 + 暂存快照验证，形成 v0.6。
 - [2026-11-01 #3 用 letwork 开发 jsecscan Java 静态扫描器](docs/dogfood/2026-11-01-jsecscan.md)：Java 首战——阿里规范经官方 p3c-pmd 机械化 0 违规，自举扫描抓到真 BLOCKER，回灌 4 项形成 v0.5。
 - [2026-11-01 #2 用已安装的 letwork 开发 sastscan 静态代码扫描器](docs/dogfood/2026-11-01-sastscan.md)：v0.2 四项改进全部实战生效（机械违规 0 返工、红测试零提交、勾选零遗漏），再回灌 3 项形成 v0.3。
@@ -357,6 +358,7 @@ skills/
 
 ## 版本记录
 
+- **v0.7.0**（2026-11-01）：IPAM 分层业务系统狗粮回灌——test.md 新增分层项目测试节奏（局部快反馈/提交点全量/测试切片分工/真实启动冒烟/H2 与生产方言差异显式登记，含自增键显式指定列）；数据库规范分册（J-DDL/J-IDX/J-SQL/J-ORM）首次实战达标。
 - **v0.6.0**（2026-11-01）：用户实测反馈回灌，commit 规程重写——任务测试为绿后**主动规划分批提交**；确立**绿色提交不变量**（每个 commit 独立可编译可测，半成品只留工作树）；选择性暂存（hunk 级 `git add -p`/`apply --cached`）；按依赖序分批；工作树有半成品时用 `git stash --keep-index` 只验证暂存快照（scratch 仓库实测）。
 - **v0.5.1**（2026-11-01）：SKILL.md frontmatter 增加 `version` 版本标记（唯一事实源）；新增 `ports/claude/install.sh` 安装脚本（幂等，安装/升级时打印版本号）；README 补版本确认与升级生效说明。
 - **v0.5**（2026-11-01）：经 jsecscan（Java/Maven）第三次狗粮回灌——新增 [p3c-pmd 机械化接入指南](skills/letwork/references/standards/java-p3c-setup.md)（版本兼容矩阵/ruleset 名/实测 pom）；code.md 增加编译型语言 API 查实纪律、依赖版本核实与首次构建超时；test.md 增加工具类项目自举验收（jsecscan 自举抓到真 BLOCKER）。
