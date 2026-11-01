@@ -105,6 +105,7 @@ rm ~/.claude/skills/letwork ~/.claude/skills/letworkstart \
 
 ## 版本记录
 
+- letwork **v0.6.0**（2026-11-01）：commit 阶段重写——主动分批选择性提交 + 绿色提交不变量（每个 commit 独立可编译可测）+ 暂存快照验证。
 - letwork **v0.5.1**（2026-11-01）：SKILL.md 版本标记 + 一键安装脚本（安装/升级打印版本号）。
 - letwork **v0.5**（2026-11-01）：Java/Maven 首次狗粮（jsecscan）——p3c-pmd 机械化接入指南、编译型语言 API 查实纪律、工具类自举验收。
 - letwork **v0.4**（2026-11-01）：跨 agent 支持（AGENTS.md 通用版 + Cursor/Codex 安装脚本 + 移植指南）。
