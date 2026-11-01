@@ -33,6 +33,9 @@
 对「下一个未勾选任务」（用户指定了任务号则用指定的）：
 
 0. **工具链预检（第一个编码任务前做一次，切换技术栈时重做）**：先确认解释器/编译器/构建工具真实可用（`python3 --version`、`go version`、`java -version`/`mvn -v`）。不可用就先解决或换栈；**不要在工具链未验证前写实现文件**——曾出现 Go 不可用导致半成品 .go 文件残留、之后被误带入提交的事故。
+   - **编译型语言（Java/Go）的第三方 API 纪律**：不熟悉的库 API 先查官方 javadoc 或解压 jar 核实类/方法签名（`javap -cp <jar> <类名>`），不凭记忆写——实测凭记忆写错 3 次（包路径、方法名），编译门禁虽能拦住但浪费往返。
+   - **依赖版本先查实**：写 pom.xml/go.mod/requirements 前从 Maven Central metadata、pkg.go.dev、PyPI JSON 确认真实最新版本与兼容性（典型暗坑：p3c-pmd 2.1.1 是 PMD6 内核，必须配 maven-pmd-plugin 3.13.x，插件 3.21+ 默认 PMD7 不兼容，见 [standards/java-p3c-setup.md](standards/java-p3c-setup.md)）。
+   - **首次构建给足超时**：Maven/Gradle 首次运行要下载插件与依赖，命令超时设 5–10 分钟；预检阶段先验证制品仓库可达（如 `curl -sI https://repo1.maven.org`）。
 1. 复述任务与它覆盖的 requirement、验收场景；说明准备改哪些文件（先给计划，大改动等确认）。
 2. Read 冻结规范：`openspec/standards/common.md` + 对应语言分册；编码中实时遵守，规则 ID 可用于解释「为什么这么写」。
 3. 实现：只做当前任务范围内的改动；发现必须顺手改的相邻问题，先在 journal 记 `[PROBLEM]` 并询问是否另开任务，不夹带。
@@ -40,7 +43,7 @@
    - **第一道：机械化检查（零成本，先跑）**——
      - Python：`python3 -m py_compile <改动文件>`；行长检查 `awk 'length>80{print FILENAME":"FNR}' <改动 .py 文件>`（默认 80 列；若 pyproject/setup.cfg 配置了更大的 line-length/black，以项目配置为准）；项目已配 `ruff check`/`flake8`/`black --check` 时直接用项目命令；
      - Go：`gofmt -l .` 必须空输出、`go vet ./...`、`go build ./...`；
-     - Java：`mvn -q compile`（或 gradle compileJava），项目配了 checkstyle/spotless 时必须跑；
+     - Java：`mvn -q compile`（或 gradle compileJava），项目配了 checkstyle/spotless 时必须跑；接入阿里 p3c-pmd 的项目还要 `mvn -q pmd:pmd`（接法与版本兼容见 [standards/java-p3c-setup.md](standards/java-p3c-setup.md)）；行宽按 J-FMT-03 用 awk 抽查 ≤120；
      - 机械检查不过 = 违反【强制】规范（如行长/格式），先修，不许进入人工评审或勾选任务。
    - **第二道：人工对照规范分册**逐条过改动文件（重点：命名、错误处理、日志、边界/null、并发、资源释放、安全）。
    - 新增逻辑有对应测试（测试任务集中写的情况除外，但任务描述要已声明）。

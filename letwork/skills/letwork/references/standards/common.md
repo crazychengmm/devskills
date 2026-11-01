@@ -9,7 +9,7 @@
   `python3 -m py_compile $(git diff --name-only -- '*.py') && out=$(awk 'length>80{print FILENAME":"FNR}' $(git diff --name-only -- '*.py')); [ -z "$out" ] && echo OK || echo "$out"`
   有项目配置时改用 `ruff check .` / `flake8` / `black --check .`。
 - Go：`gofmt -l . && go vet ./... && go build ./...`（gofmt 必须无输出）。
-- Java：`mvn -q compile`（或 `./gradlew compileJava`）；配了 checkstyle/spotless 必须跑。
+- Java：`mvn -q compile`（或 `./gradlew compileJava`）；配了 checkstyle/spotless 必须跑；接入阿里 p3c-pmd 时加 `mvn -q pmd:pmd`（版本兼容矩阵与 ruleset 名见 [java-p3c-setup.md](java-p3c-setup.md)，p3c 不查行宽，用 awk 按 ≤120 抽查）。
 - 通用：`git diff --check`（冲突标记/尾随空白）。
 
 > 判定纪律：机械检查只看退出码；测试命令重定向到文件后判 `$?` 或开 `pipefail`，禁止用管道把失败吞掉（见 test.md）。

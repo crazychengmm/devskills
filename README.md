@@ -107,5 +107,6 @@ rm ~/.claude/skills/letwork ~/.claude/skills/letworkstart \
 
 ## 版本记录
 
+- letwork **v0.5**（2026-11-01）：Java/Maven 首次狗粮（jsecscan）——p3c-pmd 机械化接入指南、编译型语言 API 查实纪律、工具类自举验收。
 - letwork **v0.4**（2026-11-01）：跨 agent 支持（AGENTS.md 通用版 + Cursor/Codex 安装脚本 + 移植指南）。
 - letwork **v0.3**（2026-11-01）：两次真实项目狗粮测试后回灌（机械化自检门禁、测试退出码纪律、勾选/记账双向核对、review 第零轴、脚手架健壮性、可粘贴检查命令、实现/测试分开提交）。详见 [letwork/README.md#版本记录](letwork/README.md#版本记录) 与 `letwork/docs/dogfood/`。

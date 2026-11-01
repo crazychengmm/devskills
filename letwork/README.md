@@ -308,6 +308,7 @@ skills/
 
 ## 验证记录（狗粮测试）
 
+- [2026-11-01 #3 用 letwork 开发 jsecscan Java 静态扫描器](docs/dogfood/2026-11-01-jsecscan.md)：Java 首战——阿里规范经官方 p3c-pmd 机械化 0 违规，自举扫描抓到真 BLOCKER，回灌 4 项形成 v0.5。
 - [2026-11-01 #2 用已安装的 letwork 开发 sastscan 静态代码扫描器](docs/dogfood/2026-11-01-sastscan.md)：v0.2 四项改进全部实战生效（机械违规 0 返工、红测试零提交、勾选零遗漏），再回灌 3 项形成 v0.3。
 - [2026-11-01 #1 用 letwork 开发 secscan 依赖漏洞扫描器](docs/dogfood/2026-11-01-secscan.md)：全链路走通，暴露并回灌 4 项流程改进（机械化自检门禁、测试退出码纪律、勾选/记账双向核对、review 第零轴）。
 
@@ -340,6 +341,7 @@ skills/
 
 ## 版本记录
 
+- **v0.5**（2026-11-01）：经 jsecscan（Java/Maven）第三次狗粮回灌——新增 [p3c-pmd 机械化接入指南](skills/letwork/references/standards/java-p3c-setup.md)（版本兼容矩阵/ruleset 名/实测 pom）；code.md 增加编译型语言 API 查实纪律、依赖版本核实与首次构建超时；test.md 增加工具类项目自举验收（jsecscan 自举抓到真 BLOCKER）。
 - **v0.4**（2026-11-01）：跨 agent 支持——`ports/AGENTS.md` 通用移植版、Cursor 安装脚本（skills+commands）、Codex 安装脚本（prompts）、[docs/porting.md](docs/porting.md) 任意工具移植指南；两份安装脚本均经沙箱 HOME 实测。
 - **v0.3**（2026-11-01）：经 sastscan 狗粮测试回灌——脚手架 flag 空格与创建后校验提示；common.md 增加可粘贴的「机械化检查一行命令」；commit.md 固化实现/测试分开提交的推荐粒度；README 补全安装与单命令使用指南。
 - **v0.2**（2026-11-01）：经 secscan 狗粮测试回灌——code 增加工具链预检与机械化自检；test 增加退出码纪律；commit 增加 micro-checklist 与双向核对；review 增加机械检查第零轴。
