@@ -23,13 +23,11 @@ npm install -g @fission-ai/openspec@latest   # 或：brew install openspec
 git clone git@github.com:crazychengmm/devskills.git ~/devskills
 cd ~/devskills
 
-# 软链 letwork 的 9 个命令到个人 skills 目录
-for d in letwork/skills/*/; do
-  ln -sfn "$(cd "$d" && pwd)" "$HOME/.claude/skills/$(basename "$d")"
-done
+# 一条脚本完成软链安装，并打印安装的版本号
+bash letwork/ports/claude/install.sh
 ```
 
-验证：**新开一个 Claude Code 会话**，输入 `/let` 应补全出 `/letworkstart`、`/let-analyze`、`/let-plan`、`/let-code`、`/let-test`、`/let-review`、`/let-commit`、`/let-retro`。
+验证：**新开一个 Claude Code 会话**，输入 `/let` 应补全出 `/letworkstart`、`/let-analyze`、`/let-plan`、`/let-code`、`/let-test`、`/let-review`、`/let-commit`、`/let-retro`。确认版本：`grep '^version:' ~/.claude/skills/letwork/SKILL.md`。
 
 > HTTPS 克隆改用 `git clone https://github.com/crazychengmm/devskills.git`。
 > 软链是开发模式：`git pull` 后立即生效，无需重新安装。
@@ -94,8 +92,8 @@ devskills/
 ## 更新与卸载
 
 ```bash
-# 更新（软链立即生效）
-cd ~/devskills && git pull
+# 更新：拉取后重跑安装脚本会打印新版本号；新开会话后生效
+cd ~/devskills && git pull && bash letwork/ports/claude/install.sh
 
 # 卸载 letwork 全套
 rm ~/.claude/skills/letwork ~/.claude/skills/letworkstart \
@@ -107,6 +105,7 @@ rm ~/.claude/skills/letwork ~/.claude/skills/letworkstart \
 
 ## 版本记录
 
+- letwork **v0.5.1**（2026-11-01）：SKILL.md 版本标记 + 一键安装脚本（安装/升级打印版本号）。
 - letwork **v0.5**（2026-11-01）：Java/Maven 首次狗粮（jsecscan）——p3c-pmd 机械化接入指南、编译型语言 API 查实纪律、工具类自举验收。
 - letwork **v0.4**（2026-11-01）：跨 agent 支持（AGENTS.md 通用版 + Cursor/Codex 安装脚本 + 移植指南）。
 - letwork **v0.3**（2026-11-01）：两次真实项目狗粮测试后回灌（机械化自检门禁、测试退出码纪律、勾选/记账双向核对、review 第零轴、脚手架健壮性、可粘贴检查命令、实现/测试分开提交）。详见 [letwork/README.md#版本记录](letwork/README.md#版本记录) 与 `letwork/docs/dogfood/`。

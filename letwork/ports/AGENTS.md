@@ -3,6 +3,7 @@
 > 本文件供任何读取 AGENTS.md 的编码 agent 使用（Codex、Cursor、Zed、Gemini CLI 等）。
 > 用法：复制到目标项目根目录（`cp <devskills>/letwork/ports/AGENTS.md ./AGENTS.md`，或追加到已有 AGENTS.md）。
 > 完整阶段细则在 skill 仓库（默认 `~/devskills/letwork/skills/letwork/`，下称 `$LETWORK`），需要时用 Read 读取；本文件自身包含最小可执行规程。
+> 版本：读取 `$LETWORK/SKILL.md` frontmatter 的 `version` 字段即为当前规程版本；用户问版本时以此为准，不要凭记忆回答。
 
 ## 你是谁、做什么
 

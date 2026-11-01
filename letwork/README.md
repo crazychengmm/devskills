@@ -70,20 +70,26 @@ curl -fsSL https://openspec.dev/cli/install.sh | sh
 
 验证：`openspec --version`（应输出 ≥ 1.16）。
 
-### 2. 获取 skill 并软链安装
+### 2. 获取 skill 并安装
 
 ```bash
-# 克隆（私有仓库用 SSH；确保你的公钥已加到 GitHub 账号）
+# 克隆（确保你的 SSH 公钥已加到 GitHub 账号；HTTPS 亦可）
 git clone git@github.com:crazychengmm/devskills.git
 cd devskills/letwork
 
-# 把 9 个 skill 全部软链到个人 skills 目录
-for d in skills/*/; do
-  ln -sfn "$(cd "$d" && pwd)" "$HOME/.claude/skills/$(basename "$d")"
-done
+# 一条脚本完成软链安装，并打印安装的版本号
+bash ports/claude/install.sh
 ```
 
-如果仓库已在本地（开发模式），在仓库目录直接跑上面同一个 for 循环即可，改完文件即时生效。
+输出示例：
+
+```text
+✓ letwork v0.5.1 已安装
+  安装位置: ~/.claude/skills（9 个命令，软链模式）
+  生效方式: 新开 Claude Code 会话后输入 /let 验证补全
+```
+
+如果仓库已在本地（开发模式），重跑同一脚本即可，幂等安全。
 
 **只装部分命令**：软链是按目录独立的，不需要哪个就不链哪个。例如只想要评审和提交两步：
 
@@ -101,12 +107,21 @@ ln -sfn "$PWD/skills/let-commit" "$HOME/.claude/skills/let-commit"
 2. 输入 `/let` 应能补全出 `/letworkstart`、`/let-analyze` 等 9 个命令。
 3. 在任意 git 仓库内运行 `/letworkstart`，它会开始做启动检查与路由。
 
-### 4. 升级与卸载
+### 4. 确认版本、升级与卸载
 
 ```bash
-# 升级：拉取最新版即可，软链指向不变，立即生效
-cd devskills && git pull
+# 确认本地安装的版本（版本号唯一事实源：核心 SKILL.md 的 frontmatter）
+grep '^version:' ~/.claude/skills/letwork/SKILL.md
 
+# 升级：拉取最新版后重跑安装脚本（软链不变时可省略），脚本会打印新版本号
+cd devskills && git pull && bash letwork/ports/claude/install.sh
+```
+
+升级生效规则（解决「pull 了但好像没变」）：
+
+- 软链指向仓库文件，`git pull` 后**磁盘内容立即更新**，无需重新建链；
+- 但**已经打开的会话可能持有旧内容**——升级后请**新开一个会话**再验证版本号；
+- 在会话中直接问「letwork 当前是什么版本」，agent 会读取 SKILL.md 顶部版本行回答。
 # 卸载：删除软链
 rm ~/.claude/skills/letwork ~/.claude/skills/letworkstart \
    ~/.claude/skills/let-analyze ~/.claude/skills/let-plan \
@@ -341,6 +356,7 @@ skills/
 
 ## 版本记录
 
+- **v0.5.1**（2026-11-01）：SKILL.md frontmatter 增加 `version` 版本标记（唯一事实源）；新增 `ports/claude/install.sh` 安装脚本（幂等，安装/升级时打印版本号）；README 补版本确认与升级生效说明。
 - **v0.5**（2026-11-01）：经 jsecscan（Java/Maven）第三次狗粮回灌——新增 [p3c-pmd 机械化接入指南](skills/letwork/references/standards/java-p3c-setup.md)（版本兼容矩阵/ruleset 名/实测 pom）；code.md 增加编译型语言 API 查实纪律、依赖版本核实与首次构建超时；test.md 增加工具类项目自举验收（jsecscan 自举抓到真 BLOCKER）。
 - **v0.4**（2026-11-01）：跨 agent 支持——`ports/AGENTS.md` 通用移植版、Cursor 安装脚本（skills+commands）、Codex 安装脚本（prompts）、[docs/porting.md](docs/porting.md) 任意工具移植指南；两份安装脚本均经沙箱 HOME 实测。
 - **v0.3**（2026-11-01）：经 sastscan 狗粮测试回灌——脚手架 flag 空格与创建后校验提示；common.md 增加可粘贴的「机械化检查一行命令」；commit.md 固化实现/测试分开提交的推荐粒度；README 补全安装与单命令使用指南。
