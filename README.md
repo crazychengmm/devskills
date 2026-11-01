@@ -68,14 +68,24 @@ ln -sfn "$PWD/letwork/skills/let-commit" "$HOME/.claude/skills/let-commit"
 
 各命令单独使用时的前置条件、行为细节见 [letwork/README.md 的「用法二」](letwork/README.md#用法二单独使用某一步)。
 
+## 其他 agent 也能用
+
+规程与规范是纯 Markdown，不绑定 Claude：`letwork/ports/AGENTS.md` 可复制到任意项目给 Codex/Cursor/Zed 等读取；并提供 Cursor、Codex 的一键安装脚本；Gemini/Copilot 等按 `letwork/docs/porting.md` 移植。详见 [跨 agent 说明](letwork/README.md#其他-agentcursor--codex-等能用吗)。
+
 ## 仓库结构
 
 ```
 devskills/
 ├── README.md                  # 本页（合集首页）
 └── letwork/                   # skill：OpenSpec 需求驱动研发流
-    ├── README.md              # 完整文档：安装/全流程/单命令/FAQ
-    ├── docs/dogfood/          # 狗粮测试报告（用自己开发自己，持续改进）
+    ├── README.md              # 完整文档：安装/全流程/单命令/跨 agent/FAQ
+    ├── docs/
+    │   ├── dogfood/           # 狗粮测试报告（用自己开发自己，持续改进）
+    │   └── porting.md         # 任意 agent 移植指南
+    ├── ports/                 # 跨 agent 适配
+    │   ├── AGENTS.md          # 通用项目规则版（复制到项目根）
+    │   ├── cursor/install.sh  # → ~/.cursor/skills + commands
+    │   └── codex/install.sh   # → ~/.codex/prompts
     └── skills/
         ├── letwork/           # 核心引擎 + 阶段规程 + 规范库 + 模板
         └── letworkstart/ … let-retro/   # 8 个薄包装命令
@@ -97,4 +107,5 @@ rm ~/.claude/skills/letwork ~/.claude/skills/letworkstart \
 
 ## 版本记录
 
+- letwork **v0.4**（2026-11-01）：跨 agent 支持（AGENTS.md 通用版 + Cursor/Codex 安装脚本 + 移植指南）。
 - letwork **v0.3**（2026-11-01）：两次真实项目狗粮测试后回灌（机械化自检门禁、测试退出码纪律、勾选/记账双向核对、review 第零轴、脚手架健壮性、可粘贴检查命令、实现/测试分开提交）。详见 [letwork/README.md#版本记录](letwork/README.md#版本记录) 与 `letwork/docs/dogfood/`。

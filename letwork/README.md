@@ -21,6 +21,7 @@
 - [代码规范库](#代码规范库)
 - [阶段与门禁](#阶段与门禁)
 - [架构](#架构)
+- [其他 agent（Cursor / Codex 等）能用吗](#其他-agentcursor--codex-等能用吗)
 - [依赖与降级](#依赖与降级)
 - [验证记录（狗粮测试）](#验证记录狗粮测试)
 - [FAQ / 故障排查](#faq--故障排查)
@@ -281,6 +282,22 @@ skills/
 
 ---
 
+## 其他 agent（Cursor / Codex 等）能用吗
+
+可以。规程、规范库、模板都是纯 Markdown，与 agent 无关；只有「斜杠命令自动注册」是 Claude 专属外壳，换成目标工具的载体即可。OpenSpec 本身原生支持 40+ 工具（`openspec init --tools cursor|codex|gemini|github-copilot|zed|warp|…`）。
+
+| 用法 | 适合 | 怎么装 |
+|---|---|---|
+| 复制 `ports/AGENTS.md` 到项目根 | 任何读 AGENTS.md 的工具（Codex、Cursor、Zed 等），零脚本 | `cp ports/AGENTS.md <项目根>/AGENTS.md` |
+| Cursor 原生命令 | Cursor 用户 | `bash ports/cursor/install.sh`（软链 skills + 生成 ~/.cursor/commands） |
+| Codex CLI 原生命令 | Codex 用户 | `bash ports/codex/install.sh`（生成 ~/.codex/prompts） |
+| 任意其他工具 | Gemini CLI / Copilot / Windsurf 等 | 按 [docs/porting.md](docs/porting.md) 的通用 6 步移植 |
+
+非 Claude 环境的两点降级（移植版已内置处理）：
+
+- 没有弹窗提问 UI 时，grilling 访谈变成一条消息内编号 Q1..Qn（带推荐答案），按编号回答。
+- 没有 Skill 工具时，命令的内容就是指示 agent **Read 仓库里的核心 SKILL.md 与对应 references 后执行**，因此规程更新（git pull）后无需重装命令。
+
 ## 依赖与降级
 
 - 推荐安装 OpenSpec CLI 获得完整能力：`openspec init/new change/validate/archive/status/list`。
@@ -323,6 +340,7 @@ skills/
 
 ## 版本记录
 
+- **v0.4**（2026-11-01）：跨 agent 支持——`ports/AGENTS.md` 通用移植版、Cursor 安装脚本（skills+commands）、Codex 安装脚本（prompts）、[docs/porting.md](docs/porting.md) 任意工具移植指南；两份安装脚本均经沙箱 HOME 实测。
 - **v0.3**（2026-11-01）：经 sastscan 狗粮测试回灌——脚手架 flag 空格与创建后校验提示；common.md 增加可粘贴的「机械化检查一行命令」；commit.md 固化实现/测试分开提交的推荐粒度；README 补全安装与单命令使用指南。
 - **v0.2**（2026-11-01）：经 secscan 狗粮测试回灌——code 增加工具链预检与机械化自检；test 增加退出码纪律；commit 增加 micro-checklist 与双向核对；review 增加机械检查第零轴。
 - **v0.1**：初版；OpenSpec 速查基于 v1.16 核实（见 `skills/letwork/references/openspec-cheats.md`）。
