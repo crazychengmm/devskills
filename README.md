@@ -1,25 +1,100 @@
 # devskills
 
-个人 Claude Code skill 合集（私有）。每个 skill 独立成目录，可单独软链到 `~/.claude/skills/` 使用。
+个人 Claude Code skill 合集。每个 skill 独立成目录，可整套安装，也可只软链其中某几个命令到 `~/.claude/skills/` 使用。
 
 ## Skills
 
-| Skill | 说明 |
-|---|---|
-| [letwork](letwork/README.md) | 基于 OpenSpec 的需求驱动研发流：`/letworkstart` 自动路由，分析（grilling 访谈）→ 拆分 → 编码 → 测试 → 规范评审 → 按任务提交 → 归档复盘；内置 Java（阿里黄山版）/Go（Uber）/Python（Google+PEP）规范库 |
+| Skill | 说明 | 详细文档 |
+|---|---|---|
+| **letwork** | 基于 OpenSpec 的需求驱动研发流：`/letworkstart` 按仓库现状自动路由，串起 需求分析（grilling 轮次访谈）→ 任务拆分 → 编码 → 测试 → 规范评审 → 按任务提交 → 归档复盘；编码与评审共用一份冻结规范，内置 Java（阿里黄山版）/ Go（Uber）/ Python（Google+PEP）规范库；支持完整流水线，也支持只单独使用其中任意一步 | [letwork/README.md](letwork/README.md) |
 
-## 安装单个 skill
+## 30 秒安装（letwork 全套 9 个命令）
+
+前置：Claude Code、git；推荐安装 [OpenSpec](https://github.com/Fission-AI/OpenSpec) CLI（非必需，缺失时自动降级为手工维护产物）：
 
 ```bash
-ln -sfn /path/to/devskills/<skill>/skills/<name> ~/.claude/skills/<name>
+# OpenSpec CLI 三选一（需要 Node ≥ 22.12；真实包名带 scope，裸 openspec 是占位假包）
+npm install -g @fission-ai/openspec@latest   # 或：brew install openspec
 ```
 
-以 letwork 为例（9 个命令一起链）：
+克隆并安装：
 
 ```bash
+git clone git@github.com:crazychengmm/devskills.git ~/devskills
+cd ~/devskills
+
+# 软链 letwork 的 9 个命令到个人 skills 目录
 for d in letwork/skills/*/; do
   ln -sfn "$(cd "$d" && pwd)" "$HOME/.claude/skills/$(basename "$d")"
 done
 ```
 
-卸载：删除 `~/.claude/skills/` 下对应的软链。
+验证：**新开一个 Claude Code 会话**，输入 `/let` 应补全出 `/letworkstart`、`/let-analyze`、`/let-plan`、`/let-code`、`/let-test`、`/let-review`、`/let-commit`、`/let-retro`。
+
+> HTTPS 克隆改用 `git clone https://github.com/crazychengmm/devskills.git`。
+> 软链是开发模式：`git pull` 后立即生效，无需重新安装。
+
+## 只装其中几个命令
+
+每个 `/let-*` 都是薄包装，真正的规程在核心 `letwork` 里，所以**最少要链核心 + 你要用的命令**。例如只要评审和提交：
+
+```bash
+ln -sfn "$PWD/letwork/skills/letwork"    "$HOME/.claude/skills/letwork"
+ln -sfn "$PWD/letwork/skills/let-review" "$HOME/.claude/skills/let-review"
+ln -sfn "$PWD/letwork/skills/let-commit" "$HOME/.claude/skills/let-commit"
+```
+
+## 快速上手
+
+在任意 git 仓库里对 Claude Code 说：
+
+```
+/letworkstart 我想做一个把 Markdown 转成 HTML 的小工具
+```
+
+它会检查现状并引导你走完全流程；中途随时可以退出，下次再跑 `/letworkstart` 会根据产物状态判断你停在哪一步。
+
+也可以**单独使用某一步**（跳过路由），例如：
+
+| 场景 | 命令 |
+|---|---|
+| 只想把一个新需求访谈清楚并落成文档 | `/let-analyze 给导出接口加 CSV 格式` |
+| 需求已定，只要拆任务 | `/let-plan` |
+| 只按规范实现 tasks.md 中的 2.1 | `/let-code 2.1` |
+| 提 PR 前只做一次正式评审 | `/let-review` |
+| 只做规范的任务维度提交 | `/let-commit` |
+| 只想把一个小步骤单独提交 | `/let-commit 修复空指针` |
+| 随时记录踩坑/决策/改进 | `/let-retro` |
+
+各命令单独使用时的前置条件、行为细节见 [letwork/README.md 的「用法二」](letwork/README.md#用法二单独使用某一步)。
+
+## 仓库结构
+
+```
+devskills/
+├── README.md                  # 本页（合集首页）
+└── letwork/                   # skill：OpenSpec 需求驱动研发流
+    ├── README.md              # 完整文档：安装/全流程/单命令/FAQ
+    ├── docs/dogfood/          # 狗粮测试报告（用自己开发自己，持续改进）
+    └── skills/
+        ├── letwork/           # 核心引擎 + 阶段规程 + 规范库 + 模板
+        └── letworkstart/ … let-retro/   # 8 个薄包装命令
+```
+
+## 更新与卸载
+
+```bash
+# 更新（软链立即生效）
+cd ~/devskills && git pull
+
+# 卸载 letwork 全套
+rm ~/.claude/skills/letwork ~/.claude/skills/letworkstart \
+   ~/.claude/skills/let-analyze ~/.claude/skills/let-plan \
+   ~/.claude/skills/let-code ~/.claude/skills/let-test \
+   ~/.claude/skills/let-review ~/.claude/skills/let-commit \
+   ~/.claude/skills/let-retro
+```
+
+## 版本记录
+
+- letwork **v0.3**（2026-11-01）：两次真实项目狗粮测试后回灌（机械化自检门禁、测试退出码纪律、勾选/记账双向核对、review 第零轴、脚手架健壮性、可粘贴检查命令、实现/测试分开提交）。详见 [letwork/README.md#版本记录](letwork/README.md#版本记录) 与 `letwork/docs/dogfood/`。
