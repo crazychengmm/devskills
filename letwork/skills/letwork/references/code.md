@@ -44,7 +44,7 @@
      - Python：`python3 -m py_compile <改动文件>`；行长检查 `awk 'length>80{print FILENAME":"FNR}' <改动 .py 文件>`（默认 80 列；若 pyproject/setup.cfg 配置了更大的 line-length/black，以项目配置为准）；项目已配 `ruff check`/`flake8`/`black --check` 时直接用项目命令；
      - Go：`gofmt -l .` 必须空输出、`go vet ./...`、`go build ./...`；
      - Java：`mvn -q compile`（或 gradle compileJava），项目配了 checkstyle/spotless 时必须跑；接入阿里 p3c-pmd 的项目还要 `mvn -q pmd:pmd`（接法与版本兼容见 [standards/java-p3c-setup.md](standards/java-p3c-setup.md)）；行宽按 J-FMT-03 用 awk 抽查 ≤120；
-     - 机械检查不过 = 违反【强制】规范（如行长/格式），先修，不许进入人工评审或勾选任务。
+     - 机械检查不过 = 违反【强制】规范（如行长/格式），先修，不许进入人工评审或勾选任务；**同一问题连修 5 轮仍不过（编译错误同理）按 test.md「重试预算与受阻降级」处理：记 `[STALLED]` → 止血恢复绿色 → 转做不依赖的任务 → 等人介入**，不要继续硬试。
    - **第二道：人工对照规范分册**逐条过改动文件（重点：命名、错误处理、日志、边界/null、并发、资源释放、安全）。
    - 新增逻辑有对应测试（测试任务集中写的情况除外，但任务描述要已声明）。
 5. 勾选 `tasks.md` 中该任务 `- [x]`；journal 追加 `[NOTE] <任务号> 实现完成：<改动摘要与遗留>`。**勾选只在两道自检都过后进行**——勾选是「已自检」的声明。

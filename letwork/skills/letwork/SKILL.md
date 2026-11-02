@@ -1,12 +1,12 @@
 ---
 name: letwork
-version: 0.7.0
+version: 0.8.0
 description: 基于 OpenSpec 的需求驱动研发流程引擎。当用户要分析需求（用轮次访谈逼问清楚）、把需求拆成开发任务、按任务逐个编码/测试/评审/提交代码、记录过程中的问题与改进、继续或归档一个 OpenSpec change 时使用；也在被 /letworkstart、/let-analyze、/let-plan、/let-code、/let-test、/let-review、/let-commit、/let-retro 调用时使用。
 ---
 
 # letwork — OpenSpec 需求驱动研发流
 
-> **版本 v0.7.0**（版本号是唯一事实源，位于本文件 frontmatter；被问「当前版本」时直接读这里，变更历史见仓库 README）。升级后需新开会话才保证加载最新内容。
+> **版本 v0.8.0**（版本号是唯一事实源，位于本文件 frontmatter；被问「当前版本」时直接读这里，变更历史见仓库 README）。升级后需新开会话才保证加载最新内容。
 
 把「需求分析 → 任务拆分 → 编码 → 测试 → 评审 → 按任务提交 → 归档复盘」串成一条流水线。每个需求是 OpenSpec 的一个 change，全过程产物都记录在该 change 目录下。
 
@@ -45,7 +45,12 @@ OpenSpec v1.16 的命令、模板格式与校验红线见 [openspec-cheats.md](r
 2. **每步留痕**：每个阶段的关键决策、问题、改进都追加到该 change 的 `letwork/journal.md`（格式见 [templates/journal.md](templates/journal.md)）。
 3. **按任务推进与提交**：一次只做一个任务；任务完成且测试为绿后**主动规划分批提交**，不要被动等待。每个 commit 都必须是**绿色提交**——checkout 出来可编译、测试通过（半成品只留工作树）；按任务选择性暂存（禁止 `git add -A`/`git add .`），工作树有半成品时用 `git stash --keep-index` 只验证暂存快照；提交前展示分批方案与暂存清单并经用户确认；不自动 push。每个任务先过机械化自检（格式/编译/lint，见 code.md）再勾选；测试判定只认真实退出码（管道不吞失败，见 test.md）。详见 [commit.md](references/commit.md)。
 4. **规范单一事实源**：coding 与 review 使用同一份冻结在项目内的规范（`openspec/standards/`），review 结论必须引用规则 ID。未冻结规范不得进入 code。
-5. **门禁不过不推进**：校验失败、测试失败、review 有 BLOCKER 时，停在当前阶段修复，不跳到下一步。
+5. **门禁不过不推进，但有重试预算**：校验失败、测试失败、review 有 BLOCKER 时先停在当前阶段修复；**同一问题修复重试 ≤5 轮**（一次「改代码→重跑门禁」算一轮，纯读日志/查文档不计入但也不许无限调查）。第 5 轮仍不过则进入**受阻降级**：
+   1. journal 追加 `[STALLED]` 条目：现象、5 轮尝试各自做了什么、根因假设、止血方式、需要人介入的具体事项；
+   2. **先止血让编译/构建恢复绿色**：首选 `git stash`/还原本批改动回到最近绿色提交；次选显式跳过失败测试（`@Disabled`/`@pytest.mark.skip`，reason 必填并指向该 journal 条目）或最小桩实现；禁止删断言、空 catch、静默 suppress 后假装通过；
+   3. 然后**可以转去做不依赖该问题的其他任务**，但必须先告知用户；没有不相关任务可做时停下等介入；
+   4. 受阻 change 在 routing 中持续显示为受阻（未关闭的 `[STALLED]`），后续会话不得忽略；问题解决后补测试、移除 skip、关闭条目。
+   细则见 test.md「重试预算与受阻降级」。
 6. **如实报告**：命令失败就贴失败信息，不许把没跑过的测试说成通过；改动外的破坏性/对外动作先征得用户同意。
 7. **不与 OpenSpec 抢所有权**：proposal/design/tasks/spec delta 只写 OpenSpec 规定格式；本 skill 自己的记录只放 change 下的 `letwork/` 子目录。
 8. **语言**：与用户交流、journal、review 报告用中文；proposal/spec 等 OpenSpec 产物遵循项目 `openspec/config.yaml` 的 product language 约定（无约定则中文）。

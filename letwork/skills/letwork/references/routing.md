@@ -31,6 +31,7 @@ git log --oneline -10                         # 最近提交（看任务提交�
 | 8 | 仍有未勾选任务 → 回到 **code**（下一任务）；全部勾选、tasks↔commits 双向核对一致、review/`openspec validate --strict <change>` 通过 | 提议 **archive**（归档前先过一遍 retro） |
 
 补充信号：
+- **受阻优先**：journal 中存在未关闭的 `[STALLED]` 条目时，路由结果直接显示「受阻」：说明卡点与待人为介入事项，询问用户是①已解决（验证后关闭条目并回到原任务）、②先做其他不依赖任务，不允许忽略 STALLED 当作正常推进。
 - `openspec status --change <name> --json` 给出机器可读状态（v1.16 实测字段）：`artifacts[]`（id=proposal/specs/design/tasks，status=ready/blocked/done）、`isPlanningComplete`、`isComplete`、`applyRequires`、`nextSteps`。用它交叉验证表中第 1–2 行；注意 **tasks 依赖 specs 与 design 都 done**。
 - `openspec list --json` 的 `changes[].completedTasks/totalTasks/status/lastModified` 可用于多 change 列表展示。
 - design.md 是工作流必备产物（可短但不可缺）。

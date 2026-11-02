@@ -51,7 +51,7 @@ git commit -m "..."
 git stash pop      # 取回未提交工作，继续下一批
 ```
 
-失败处理：`git stash pop` 取回改动，回到 code 修复，严禁带红提交。
+失败处理：`git stash pop` 取回改动，回到 code 修复，严禁带红提交。**同一问题连修 5 轮仍不过时，不要继续硬试**，按 test.md「重试预算与受阻降级」走：`[STALLED]` 记录 → 止血恢复绿色（还原本批或显式 skip）→ 告知用户后转不依赖任务。
 
 ## 4. micro-checklist（每批逐项确认）
 
