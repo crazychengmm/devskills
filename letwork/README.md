@@ -328,6 +328,7 @@ skills/
 
 ## 验证记录（狗粮测试）
 
+- [2026-11-02 #10 5 项目批量（Java/Python×2/Go×2）](docs/dogfood/2026-11-02-batch-five-projects.md)：首次覆盖 Go 与并发测试，35 用例，回灌 gofmt/并发测试/限流区分，形成 v0.13。
 - [2026-11-02 #9 ipam-v2 VLAN 管理](docs/dogfood/2026-11-02-ipam-v2-vlan.md)：v0.10 预览 + v0.9 git notes 真实写入实测，回灌确认豁免/预览精简/notes 持久性，形成 v0.11。
 - [2026-11-02 #8 方案预览先行（Markdown+Mermaid）](docs/dogfood/2026-11-02-preview-first.md)：正式 spec/代码前先出一页预览确认，形成 v0.10。
 - [2026-11-02 #7 git notes 备注（可选）+ 设计模式优化轴](docs/dogfood/2026-11-02-design-axis-git-notes.md)：三轴评审，notes 机制与设计建议双向演练，形成 v0.9。
@@ -367,6 +368,7 @@ skills/
 
 ## 版本记录
 
+- **v0.13.0**（2026-11-02）：5 项目批量（Java×1/Python×2/Go×2 首次）狗粮回灌——Go 机械检查改为先 `gofmt -w` 自动格式化再验证；test.md 新增并发代码测试规则（`-race`、禁 sleep 同步、CAS、channel 信号、背压突发语义）；环境限流（429/registry 超时）不消耗代码修复 5 轮预算，按 Retry-After 重试；bootstrap 补 `go mod init` 等语言工程初始化。
 - **v0.12.0**（2026-11-02）：新增 [OpenSpec 原理与多人协同文档](docs/openspec-collaboration.md)——spec/change/archive 三概念、冲突概率矩阵（change 隔离/journal 追加/standards 冻结/specs 归档单点写）、分支工作流、同 capability 并行与归档冲突处理、CI 建议；cheats 与 README 挂入口。
 - **v0.11.0**（2026-11-02）：ipam-v2 同栈增量狗粮回灌——明确「不用问我」=本次确认门禁一次性豁免（产物仍出、记 journal、不延续）；同栈/同域增量时预览可精简为差异+取舍（先读代码确认同栈）；git notes 持久性说明（fetch 恢复、review.md 才是随代码存档、归档提交不继承备注）。
 - **v0.10.0**（2026-11-02）：**方案预览先行**——非平凡需求在正式 spec/代码前先出一页 `letwork/preview.md`（Markdown + Mermaid 流程图/分层图 + 关键取舍），用户确认方向后再展开，避免错方向浪费 token；新增预览模板与 Mermaid 自检；长报告先给提纲确认。

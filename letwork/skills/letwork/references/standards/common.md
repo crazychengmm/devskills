@@ -8,7 +8,8 @@
 - Python（行长阈值以 pyproject/setup.cfg 配置为准，默认 80）：
   `python3 -m py_compile $(git diff --name-only -- '*.py') && out=$(awk 'length>80{print FILENAME":"FNR}' $(git diff --name-only -- '*.py')); [ -z "$out" ] && echo OK || echo "$out"`
   有项目配置时改用 `ruff check .` / `flake8` / `black --check .`。
-- Go：`gofmt -l . && go vet ./... && go build ./...`（gofmt 必须无输出）。
+- Go：gofmt 是**规范的自动格式化器**，不是只报错的 linter——先自动修再验证：`gofmt -w . && test -z "$(gofmt -l .)" && go vet ./... && go build ./...`（提交前 `-l` 必须无输出；格式化产生的改动也属于本批提交，不要留未格式化代码在工作树）。
+- Python 有配置时同理可自动修：`black .` 或 `isort .`（仅在项目已声明使用时，没有配置则只按行长/ruff 报告，不擅自引入格式化工具）。
 - Java：`mvn -q compile`（或 `./gradlew compileJava`）；配了 checkstyle/spotless 必须跑；接入阿里 p3c-pmd 时加 `mvn -q pmd:pmd`（版本兼容矩阵与 ruleset 名见 [java-p3c-setup.md](java-p3c-setup.md)，p3c 不查行宽，用 awk 按 ≤120 抽查）。
 - 通用：`git diff --check`（冲突标记/尾随空白）。
 
