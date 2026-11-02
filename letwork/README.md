@@ -328,6 +328,7 @@ skills/
 
 ## 验证记录（狗粮测试）
 
+- [2026-11-03 #11 Go HTTP + 多 change + 时间注入 + skip_specs](docs/dogfood/2026-11-03-gohttp-multichange-time.md)：短链服务（race×3）、两 change 并行归档、令牌桶 FakeClock、无 spec 重构，形成 v0.14。
 - [2026-11-02 #10 5 项目批量（Java/Python×2/Go×2）](docs/dogfood/2026-11-02-batch-five-projects.md)：首次覆盖 Go 与并发测试，35 用例，回灌 gofmt/并发测试/限流区分，形成 v0.13。
 - [2026-11-02 #9 ipam-v2 VLAN 管理](docs/dogfood/2026-11-02-ipam-v2-vlan.md)：v0.10 预览 + v0.9 git notes 真实写入实测，回灌确认豁免/预览精简/notes 持久性，形成 v0.11。
 - [2026-11-02 #8 方案预览先行（Markdown+Mermaid）](docs/dogfood/2026-11-02-preview-first.md)：正式 spec/代码前先出一页预览确认，形成 v0.10。
@@ -368,6 +369,7 @@ skills/
 
 ## 版本记录
 
+- **v0.14.0**（2026-11-03）：Go HTTP 服务 + 多 change 并行 + 时间注入 + skip_specs 四项首次覆盖——routing 增加多 change 自主选择规则（受阻→最早→进度）；test.md 增加时间相关代码注入时钟（禁真实 sleep）与 HTTP 冒烟就绪轮询（禁固定 sleep，000 假失败实证）；cheats 补 skip_specs 端到端做法。
 - **v0.13.0**（2026-11-02）：5 项目批量（Java×1/Python×2/Go×2 首次）狗粮回灌——Go 机械检查改为先 `gofmt -w` 自动格式化再验证；test.md 新增并发代码测试规则（`-race`、禁 sleep 同步、CAS、channel 信号、背压突发语义）；环境限流（429/registry 超时）不消耗代码修复 5 轮预算，按 Retry-After 重试；bootstrap 补 `go mod init` 等语言工程初始化。
 - **v0.12.0**（2026-11-02）：新增 [OpenSpec 原理与多人协同文档](docs/openspec-collaboration.md)——spec/change/archive 三概念、冲突概率矩阵（change 隔离/journal 追加/standards 冻结/specs 归档单点写）、分支工作流、同 capability 并行与归档冲突处理、CI 建议；cheats 与 README 挂入口。
 - **v0.11.0**（2026-11-02）：ipam-v2 同栈增量狗粮回灌——明确「不用问我」=本次确认门禁一次性豁免（产物仍出、记 journal、不延续）；同栈/同域增量时预览可精简为差异+取舍（先读代码确认同栈）；git notes 持久性说明（fetch 恢复、review.md 才是随代码存档、归档提交不继承备注）。

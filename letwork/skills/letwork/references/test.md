@@ -66,7 +66,29 @@
 - 实测价值很高：Java 版 jsecscan 的自举扫描抓到一个靶场测试发现不了的真 BLOCKER（解析器默认 Java8 语法级别，连自己用的 record 都解析不了）。
 - 自举失败按正常缺陷处理：回 code 修复 → 加回归测试 → 重跑，不允许带着「扫不了自己」的工具进入 review。
 
-## 5b. 并发代码测试（Go goroutine/Java 线程池等）
+## 5a. 时间相关代码测试
+
+被测逻辑依赖时间（重试退避、令牌桶、超时、缓存过期）时，**禁止在测试里真实 sleep 等墙钟**：
+
+- 注入时间源：Go 传 `func() time.Time`/`now func()`、Java 传 `Clock`/`Sleeper` 接口（jretry 的 Sleeper、令牌桶的 FakeClock 均为此模式）、Python 传无参 callable（默认 `time.monotonic`）。
+- 测试用手动时钟（FakeClock.advance(1.5)）精确断言「补充了几个令牌」「睡眠了哪些时长」，断言的是时间序列而不是等待真实时间。
+- 生产默认实现才接真实时钟；测试中零真实等待。
+- 时钟回拨（now < last）按 0 差值处理，写一个用例覆盖。
+
+## 5b. 真实进程/HTTP 冒烟的就绪等待
+
+启动 fat jar/Go binary 后做 HTTP 冒烟时，**不能用固定 `sleep 1`**（实测首启稍慢会得到全 000 的假失败）：
+
+```bash
+for i in $(seq 1 30); do
+  [ "$(curl -s -o /dev/null -w '%{http_code}' http://localhost:PORT/healthz)" = "200" ] && break
+  sleep 0.5
+done
+```
+
+即「就绪轮询 + 超时上限」，与并发测试禁 sleep 同理：sleep 不保证就绪，探针信号才保证。被测服务最好提供 `/healthz` 探针。
+
+## 5c. 并发代码测试（Go goroutine/Java 线程池等）
 
 被测对象含并发时，普通「跑过即绿」不够，按以下规则（gopool 狗粮提炼）：
 

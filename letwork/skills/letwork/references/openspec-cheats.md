@@ -38,6 +38,8 @@ openspec/
 
 `.openspec.yaml` 已识别键（strict schema）：`schema`（必填）、`created: YYYY-MM-DD`、`goal`、`affected_areas`、`skip_specs: true`（纯重构/文档类；此时 specs/ 下不得有文件）、`retire_capabilities: true`、`initiative`，以及任意 `x-*` 扩展键。
 
+**skip_specs 端到端做法（实测 v1.16）**：内部重构/依赖升级/文档类无行为变化的 change，在 `.openspec.yaml` 写 `skip_specs: true`，change 目录只保留 proposal.md/design.md/tasks.md（不建 specs/），`validate --strict` 会输出 INFO「zero deltas accepted」而非报错；archive 后只移动目录，**不修改主 specs**。验收靠既有测试全绿，不靠 spec。
+
 ## 模板格式
 
 **proposal.md**：`# Proposal`；`## Why`（50–1000 字符，写动机/问题/为何现在）；`## What Changes`；`## Capabilities` 下分 `### New Capabilities`（每项 `- \`path\`: 描述`，path 决定 specs 目录名）与 `### Modified Capabilities`（仅 spec 级行为变化才列，必须用 specs/ 下已有的精确路径，纯实现改动不列）；`## Impact`。

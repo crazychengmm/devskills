@@ -105,6 +105,7 @@ rm ~/.claude/skills/letwork ~/.claude/skills/letworkstart \
 
 ## 版本记录
 
+- letwork **v0.14.0**（2026-11-03）：Go HTTP/多 change 并行/时间注入/skip_specs 首次覆盖；多 change 自主路由、时钟注入、冒烟就绪轮询。
 - letwork **v0.13.0**（2026-11-02）：5 项目批量狗粮（首次覆盖 Go/并发）——gofmt 自动格式化、并发测试 -race 规则、环境限流不计入修复预算、Go 工程初始化。
 - letwork **v0.12.0**（2026-11-02）：新增 OpenSpec 原理与多人协同文档（冲突矩阵、分支工作流、归档冲突处理）。
 - letwork **v0.11.0**（2026-11-02）：ipam-v2 狗粮——确认门禁一次性豁免语义、同栈增量预览精简、git notes 持久性说明。
