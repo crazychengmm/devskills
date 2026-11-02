@@ -2,6 +2,8 @@
 
 来源：对 npm `@fission-ai/openspec@1.16.0` 包与 Fission-AI/OpenSpec 仓库的核实。升级大版本后请重新核实。
 
+> 原理与多人协同（change 隔离、归档冲突、分支工作流）见 [../../../docs/openspec-collaboration.md](../../../docs/openspec-collaboration.md)。
+
 ## 常用 CLI（真实存在）
 
 | 命令 | 用途 |

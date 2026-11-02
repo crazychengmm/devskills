@@ -21,6 +21,7 @@
 - [代码规范库](#代码规范库)
 - [阶段与门禁](#阶段与门禁)
 - [架构](#架构)
+- [OpenSpec 原理与多人协同](docs/openspec-collaboration.md)
 - [其他 agent（Cursor / Codex 等）能用吗](#其他-agentcursor--codex-等能用吗)
 - [依赖与降级](#依赖与降级)
 - [验证记录（狗粮测试）](#验证记录狗粮测试)
@@ -313,6 +314,10 @@ skills/
 - 没有弹窗提问 UI 时，grilling 访谈变成一条消息内编号 Q1..Qn（带推荐答案），按编号回答。
 - 没有 Skill 工具时，命令的内容就是指示 agent **Read 仓库里的核心 SKILL.md 与对应 references 后执行**，因此规程更新（git pull）后无需重装命令。
 
+## OpenSpec 原理与多人协同
+
+不熟悉 OpenSpec 或团队多人并行开发时，先读：**[docs/openspec-collaboration.md](docs/openspec-collaboration.md)**。核心一句话：change 目录按特性物理隔离（并行几乎零冲突），主规格 `specs/` 只在归档时单点写入（冲突收敛到可控时刻），journal 等追加型记录冲突时两边都保留。文档内含冲突概率矩阵、分支工作流、同 capability 并行/归档冲突处理与 CI 建议。
+
 ## 依赖与降级
 
 - 推荐安装 OpenSpec CLI 获得完整能力：`openspec init/new change/validate/archive/status/list`。
@@ -362,6 +367,7 @@ skills/
 
 ## 版本记录
 
+- **v0.12.0**（2026-11-02）：新增 [OpenSpec 原理与多人协同文档](docs/openspec-collaboration.md)——spec/change/archive 三概念、冲突概率矩阵（change 隔离/journal 追加/standards 冻结/specs 归档单点写）、分支工作流、同 capability 并行与归档冲突处理、CI 建议；cheats 与 README 挂入口。
 - **v0.11.0**（2026-11-02）：ipam-v2 同栈增量狗粮回灌——明确「不用问我」=本次确认门禁一次性豁免（产物仍出、记 journal、不延续）；同栈/同域增量时预览可精简为差异+取舍（先读代码确认同栈）；git notes 持久性说明（fetch 恢复、review.md 才是随代码存档、归档提交不继承备注）。
 - **v0.10.0**（2026-11-02）：**方案预览先行**——非平凡需求在正式 spec/代码前先出一页 `letwork/preview.md`（Markdown + Mermaid 流程图/分层图 + 关键取舍），用户确认方向后再展开，避免错方向浪费 token；新增预览模板与 Mermaid 自检；长报告先给提纲确认。
 - **v0.9.0**（2026-11-02）：评审从双轴变三轴，新增**设计模式优化轴**（SUGGESTION 不阻断，观察信号→模式对照表，禁止凑数/过度设计）；评审结论可按用户选择写入 **git notes**（`refs/notes/review` 挂提交，不进代码树不改哈希，多轮 append），git notes/PR 评论均为可选项；经 notes 机制与设计轴双向演练验证。
