@@ -105,6 +105,7 @@ rm ~/.claude/skills/letwork ~/.claude/skills/letworkstart \
 
 ## 版本记录
 
+- letwork **v0.11.0**（2026-11-02）：ipam-v2 狗粮——确认门禁一次性豁免语义、同栈增量预览精简、git notes 持久性说明。
 - letwork **v0.10.0**（2026-11-02）：方案预览先行——正式 spec/代码前先出一页 Markdown+Mermaid 预览确认；长报告先提纲后全文。
 - letwork **v0.9.0**（2026-11-02）：评审新增设计模式优化轴（三轴）；评审结论可按用户选择写入 git notes（可选）。
 - letwork **v0.8.0**（2026-11-02）：门禁重试预算（≤5 轮）与受阻降级（`[STALLED]` 止血恢复绿色、转任务、等人介入）。

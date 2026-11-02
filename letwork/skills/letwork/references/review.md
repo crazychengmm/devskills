@@ -90,7 +90,9 @@ git notes --ref=review list
 ```
 
 - 备注内容（精简，约 10–20 行）：评审日期与轮次、被评审范围（base..HEAD）、结论（BLOCKER/MAJOR/MINOR/SUGGESTION 计数）、validate 结果、测试结果、**设计建议条数与一句话列表**、完整报告路径（change 下 `letwork/review.md`）。格式见 review-format.md 的「git notes 摘要格式」。
-- notes 默认不随普通 push 传播；需要远端可见时显式推送：`git push origin refs/notes/review`（仍需用户同意，不自动推）。
+- notes 默认不随普通 push/clone 传播（它是独立 ref `refs/notes/review`，不是分支提交）；需要远端可见时显式推送：`git push origin refs/notes/review`（仍需用户同意，不自动推）。
+- **持久性提醒**：归档检查时若本次评审写了 notes，提醒用户两件事：① 新机器/新克隆要取回备注需 `git fetch origin refs/notes/review:refs/notes/review`；② 不推远端的 notes 只存在本地，机器故障会丢——重要评审摘要同时已保存在 change 的 `letwork/review.md`（随代码提交），notes 只是提交上的便捷索引，不是唯一存档。
+- notes 挂在「被评审的那个提交」上；归档产生的新提交不会自动继承，如需给归档提交也挂备注，对新 sha 再 append。
 - 发了 notes 时 journal 记录 `…，notes 已挂 <短sha>`；没发就不写这句，不把 notes 当作必做项。
 
 ### 5.3 处置
