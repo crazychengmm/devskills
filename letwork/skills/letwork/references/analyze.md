@@ -43,6 +43,31 @@ openspec new change <name> --description "<一句话>"
 
 CLI 不可用时按 openspec-cheats.md 手工建目录与 `.openspec.yaml`（`schema: spec-driven`、`created: <YYYY-MM-DD>`）。同时创建私有目录 `openspec/changes/<name>/letwork/`，从 templates 复制 journal.md，写入分析开始条目。
 
+## 2b. 方案预览先行，确认后再细化（省 token 机制）
+
+任何**非平凡**产物（多模块/多步骤/有多种设计可能的需求）在写正式文档与代码之前，先产出一份**轻量方案预览**给用户确认，再展开细节。顺序固定为：
+
+```
+grilling 访谈收敛 → 方案预览（Markdown + Mermaid，轻量）→ 用户确认/改方向
+   → 正式 proposal/design/spec/tasks（细） → code
+```
+
+1. **预览内容（控制篇幅，能一页看完）**：
+   - 目标与范围：做什么、不做什么（Non-Goals）；
+   - **Mermaid 流程图/时序图/分层图**：主链路与关键异常路径；有数据结构时给核心模型关系图；
+   - 模块/分层草图：组件名 + 一句话职责 + 依赖方向（不写完整代码，最多接口签名或伪代码片段）；
+   - 关键取舍：2–4 个，每个一句话「选项 → 推荐 → 理由」；
+   - 风险与待确认点。
+2. **先写预览文件**：`openspec/changes/<name>/letwork/preview.md`（Markdown，Mermaid 用 ```mermaid 代码块），在对话给出链接与摘要。
+3. **明确等确认**：询问「方向是否 OK / 要调整哪里」。用户没确认前**不写正式 spec、不拆细任务、不写代码**。
+4. **用户改方向时只改预览**（预览改动便宜），再次确认；确认后预览作为 proposal/design 的骨架展开，并在 design.md 开头引用 preview.md。
+5. 平凡需求（单函数 bugfix、文案、用户已在访谈中把方案说到实现级）允许跳过预览，直接说明「需求简单，跳过预览」。
+6. 报告类产物同理：评审/调研/扫描的**正式长报告**前，先给「将包含哪些章节、预计格式（表格/JSON/Mermaid）」的提纲，确认结构后再产出全文。
+
+> 目的：错方向时浪费的是一份一页预览，而不是一套 spec + 实现 + 测试。
+
+Mermaid 自检（写完预览顺手做）：代码围栏 ``` 必须成对；流程图首行为 `flowchart TD/LR`；每条边含 `-->`、方括号/花括号配对、边标签 `|文字|` 成对出现；图中声明的节点都应被边引用（无孤儿节点）。装有 mermaid-cli 时可 `mmdc -i <文件> -o /tmp/p.svg` 真实渲染兜底。
+
 ## 3. 产出物
 
 1. **proposal.md**：Why 写透「问题、为什么现在做、不做会怎样」（50–1000 字符）；Capabilities 一节：

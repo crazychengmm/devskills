@@ -323,6 +323,7 @@ skills/
 
 ## 验证记录（狗粮测试）
 
+- [2026-11-02 #8 方案预览先行（Markdown+Mermaid）](docs/dogfood/2026-11-02-preview-first.md)：正式 spec/代码前先出一页预览确认，形成 v0.10。
 - [2026-11-02 #7 git notes 备注（可选）+ 设计模式优化轴](docs/dogfood/2026-11-02-design-axis-git-notes.md)：三轴评审，notes 机制与设计建议双向演练，形成 v0.9。
 - [2026-11-02 #6 用户反馈：门禁重试上限与受阻降级](docs/dogfood/2026-11-02-stalled-gate.md)：5 轮重试预算 + `[STALLED]` 止血/转任务/人介入机制，形成 v0.8。
 - [2026-11-01 #5 用 letwork 开发 IPAM 分层业务系统](docs/dogfood/2026-11-01-ipam.md)：首次覆盖 Spring Boot 分层 + 数据库规范（J-DDL/IDX/ORM 全参数化），jsecscan 交叉扫描 0 命中，回灌分层测试节奏形成 v0.7。
@@ -360,6 +361,7 @@ skills/
 
 ## 版本记录
 
+- **v0.10.0**（2026-11-02）：**方案预览先行**——非平凡需求在正式 spec/代码前先出一页 `letwork/preview.md`（Markdown + Mermaid 流程图/分层图 + 关键取舍），用户确认方向后再展开，避免错方向浪费 token；新增预览模板与 Mermaid 自检；长报告先给提纲确认。
 - **v0.9.0**（2026-11-02）：评审从双轴变三轴，新增**设计模式优化轴**（SUGGESTION 不阻断，观察信号→模式对照表，禁止凑数/过度设计）；评审结论可按用户选择写入 **git notes**（`refs/notes/review` 挂提交，不进代码树不改哈希，多轮 append），git notes/PR 评论均为可选项；经 notes 机制与设计轴双向演练验证。
 - **v0.8.0**（2026-11-02）：门禁**重试预算与受阻降级**——同一问题最多修复 5 轮，仍不过则记 `[STALLED]`（尝试清单/待介入事项）、先止血恢复绿色（还原提交或显式 skip，禁止删断言/空 catch）、告知用户后转做不依赖任务、routing 持续识别受阻状态直到 `[STALLED-CLOSED]`；journal 模板增加 STALLED 格式。
 - **v0.7.0**（2026-11-01）：IPAM 分层业务系统狗粮回灌——test.md 新增分层项目测试节奏（局部快反馈/提交点全量/测试切片分工/真实启动冒烟/H2 与生产方言差异显式登记，含自增键显式指定列）；数据库规范分册（J-DDL/J-IDX/J-SQL/J-ORM）首次实战达标。
