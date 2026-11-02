@@ -1,6 +1,6 @@
 # review — 代码评审阶段
 
-双轴评审 + OpenSpec 校验。评审是独立视角：先读 [standards/review-format.md](standards/review-format.md) 拿到级别定义与报告格式。
+三轴评审（规范 / spec 一致性 / 设计模式优化）+ OpenSpec 校验，结论写入 git notes。先读 [standards/review-format.md](standards/review-format.md) 拿到级别定义与报告格式。
 
 ## 1. 确定评审范围（diff base）
 
@@ -37,6 +37,26 @@
 - 反向检查：diff 里是否有 spec 未声明的行为变化（超范围实现 / 夹带需求）——有的话要么补 spec（回 analyze 重新 validate），要么从本次改动拿掉。
 - tasks.md 中已勾选任务与 diff 是否相符（虚报完成、勾选了但没实现）。
 
+## 3b. 轴三：设计模式优化（建议项，不阻断）
+
+规范轴回答「是否违规」，spec 轴回答「是否做对了需求」，本轴回答「**能不能设计得更好**」。只给有实际收益的建议，级别统一为 SUGGESTION，不制造 BLOCKER/MAJOR；同时做反向检查——不为套模式而过度设计（YAGNI）。
+
+按以下清单观察 diff（跨语言通用，命名以 Java 习惯举例）：
+
+| 观察到的信号 | 可考虑的模式/手段 |
+|---|---|
+| 三处及以上近似代码、复制修改 | 提取方法/类（DRY）、模板方法 |
+| 按类型/字符串的长 if-else、switch 分发 | 策略模式 + 注册表、多态、枚举行为 |
+| 对象构造参数多、有多种合法组合 | Builder；创建条件复杂 → 工厂 |
+| 方法既改状态又做决策又格式化输出 | 单一职责拆分；领域逻辑从 controller 下沉 service/domain |
+| long/String 等原始类型承载领域概念（IP、金额、CIDR） | 值对象（小类型 + 行为内聚，参考 Cidr） |
+| 到处判空/空集合分支 | Optional、空对象 |
+| 线性扫描热点、可预先排序的数据 | 有序集合/索引、TreeSet 间隙查找 |
+| 跨层 new 具体实现、难以测试替换 | 依赖注入到接口 |
+| 同步轮询/回调嵌套 | 事件/观察者（仅在确有解耦收益时） |
+
+每条建议写清：**位置（文件:行）→ 观察 → 建议的模式/重构 → 预期收益（可读性/扩展性/性能）→ 成本估计**。没有像样的优化点就明说「无」，**禁止凑数**。用户对每条建议选：采纳（回 code 作为新任务）/挂账（journal `[IMPROVEMENT]`）/拒绝（注明理由或标注 YAGNI）。
+
 ## 4. 校验
 
 ```bash
@@ -45,8 +65,35 @@ openspec validate <change> --strict
 
 CLI 不可用时走 openspec-cheats.md 人工自检清单。失败原样贴出。
 
-## 5. 产出与处置
+## 5. 产出、git notes 备注与处置
 
-- 报告写入 `letwork/review.md`（模板见 [templates/review.md](../templates/review.md)），同时在对话给出摘要；journal 追加 `[NOTE] review 完成：BLOCKER n / MAJOR n / MINOR n`。
-- 有 BLOCKER → 回 code 修复，修复后重评对应条目（报告保留历史，新报告标注轮次与日期）。
-- 全部为零 BLOCKER 且 validate 通过 → 放行 commit/archive；MAJOR 项要逐条得到用户「修」或「挂账」的决定，挂账项写 journal `[IMPROVEMENT]`。
+### 5.1 完整报告
+
+写入 `letwork/review.md`（模板见 [templates/review.md](../templates/review.md)，含三轴 + 设计建议区），对话给出摘要。
+
+### 5.2 git notes 备注（可选项，用户选择才做）
+
+完整报告 `letwork/review.md` 是**默认且必须**的产出。是否额外把摘要写进 git 备注由用户决定，不强制：
+
+- 评审开始时确认：「是否把评审摘要写到 git notes（挂在被评审提交上，不进代码树、不改哈希）？」用户明确要才做；没有要求就只写 review.md。
+- 同理，发到 GitHub/GitLab PR 评论（`gh pr review --comment`）也是可选项，需要 `gh` 已登录且用户明确要求。
+
+用户选择 git notes 时，把**评审摘要挂到被评审范围的 HEAD 提交**（git 原生备注，不进代码树、不改提交哈希）：
+
+```bash
+# 首次添加；同一提交再次评审改用 append（保留历次轮次）
+git notes --ref=review add -F <摘要文件> <被评审HEAD>
+git notes --ref=review append -F <摘要文件> <被评审HEAD>
+# 查看与列出
+git notes --ref=review show <sha>
+git notes --ref=review list
+```
+
+- 备注内容（精简，约 10–20 行）：评审日期与轮次、被评审范围（base..HEAD）、结论（BLOCKER/MAJOR/MINOR/SUGGESTION 计数）、validate 结果、测试结果、**设计建议条数与一句话列表**、完整报告路径（change 下 `letwork/review.md`）。格式见 review-format.md 的「git notes 摘要格式」。
+- notes 默认不随普通 push 传播；需要远端可见时显式推送：`git push origin refs/notes/review`（仍需用户同意，不自动推）。
+- 发了 notes 时 journal 记录 `…，notes 已挂 <短sha>`；没发就不写这句，不把 notes 当作必做项。
+
+### 5.3 处置
+
+- 有 BLOCKER → 回 code 修复，修复后重评对应条目（review.md 保留历史，新报告标注轮次与日期；notes 用 append 追加新一轮）。
+- 零 BLOCKER 且 validate 通过 → 放行 commit/archive；MAJOR 与 SUGGESTION 逐条得到用户「修 / 挂账 / 拒绝」决定，挂账写 journal `[IMPROVEMENT]`。

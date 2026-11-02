@@ -1,12 +1,12 @@
 ---
 name: letwork
-version: 0.8.0
+version: 0.9.0
 description: 基于 OpenSpec 的需求驱动研发流程引擎。当用户要分析需求（用轮次访谈逼问清楚）、把需求拆成开发任务、按任务逐个编码/测试/评审/提交代码、记录过程中的问题与改进、继续或归档一个 OpenSpec change 时使用；也在被 /letworkstart、/let-analyze、/let-plan、/let-code、/let-test、/let-review、/let-commit、/let-retro 调用时使用。
 ---
 
 # letwork — OpenSpec 需求驱动研发流
 
-> **版本 v0.8.0**（版本号是唯一事实源，位于本文件 frontmatter；被问「当前版本」时直接读这里，变更历史见仓库 README）。升级后需新开会话才保证加载最新内容。
+> **版本 v0.9.0**（版本号是唯一事实源，位于本文件 frontmatter；被问「当前版本」时直接读这里，变更历史见仓库 README）。升级后需新开会话才保证加载最新内容。
 
 把「需求分析 → 任务拆分 → 编码 → 测试 → 评审 → 按任务提交 → 归档复盘」串成一条流水线。每个需求是 OpenSpec 的一个 change，全过程产物都记录在该 change 目录下。
 
@@ -31,7 +31,7 @@ description: 基于 OpenSpec 的需求驱动研发流程引擎。当用户要分
 | plan | 拆任务到 tasks.md，任务与 requirement 双向可追溯 | 任务粒度 ≤ 半天、可独立测试；validate 通过；用户确认 | [plan.md](references/plan.md) |
 | code | 一次一个任务：加载规范 → 实现 → 自检 → 勾选 | 规范已冻结；当前任务自检过；tasks.md 勾选 | [code.md](references/code.md) |
 | test | 运行当前任务相关测试，记录证据 | 测试通过；命令与结果记入 journal；失败回 code | [test.md](references/test.md) |
-| review | 规范轴 + spec 一致性轴双轴评审 | 无 BLOCKER；`validate --strict` 通过；报告落盘 | [review.md](references/review.md) |
+| review | 三轴评审：规范符合度 + spec/场景一致性 + 设计模式优化；报告写入 change；git notes/PR 评论为用户可选项 | 无 BLOCKER；`validate --strict` 通过；报告落盘 | [review.md](references/review.md) |
 | commit | 分批选择性提交；每批是可编译可测的绿色提交，Conventional Commits，记账 | 编译+测试在暂存快照上为绿；方案与暂存清单经用户确认；SHA 登入 commits.md | [commit.md](references/commit.md) |
 | retro | 记录问题/决策/改进；归档前汇总 | journal 已追加；归档前有汇总条目 | [retro.md](references/retro.md) |
 
