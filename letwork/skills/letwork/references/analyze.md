@@ -43,8 +43,11 @@ openspec new change <name> --description "<一句话>"
 
 CLI 不可用时按 openspec-cheats.md 手工建目录与 `.openspec.yaml`（`schema: spec-driven`、`created: <YYYY-MM-DD>`）。同时创建私有目录 `openspec/changes/<name>/letwork/`，从 templates 复制 journal.md，写入分析开始条目。
 
-## 2b. 方案预览先行，确认后再细化（省 token 机制）
+## 2a. 关联既存欠债（仅既存项目）
 
+若 `openspec/letwork/debt-backlog.md` 存在，在访谈收敛后、写预览前：按本次需求涉及的模块/文件匹配 DEFERRED 或 OPEN 条目，列出相关欠债询问用户是否本次一起修（这是用户的明确要求：相关联模块开发时一起改）。同一 change 内对同一条只问一次；用户仍选择暂缓就更新「上次回顾日期」，不纠缠。决定一起修的条目状态改 `FIXING-随<change>处理` 并纳入任务；不改代码的纯记录不影响绿色门禁。
+
+## 2b. 方案预览先行，确认后再细化（省 token 机制）
 任何**非平凡**产物（多模块/多步骤/有多种设计可能的需求）在写正式文档与代码之前，先产出一份**轻量方案预览**给用户确认，再展开细节。顺序固定为：
 
 ```

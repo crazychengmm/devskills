@@ -19,6 +19,7 @@
 - Go：`gofmt -l .`（必须空输出）、`go vet ./...`、`go build ./...`。
 - Java：`mvn -q compile`（或 gradle），项目配了 checkstyle/spotless 必须跑。
 - 通用：`git diff --check`（冲突标记/尾随空白）。
+- **既存欠债**：若 `openspec/letwork/debt-backlog.md` 存在，检查本次 diff 是否触及条目关联文件；决定本次修的验证修复并准备关闭，继续暂缓的在报告 INFO 区注明「已知欠债，见 DEBT-xxx」；新发现的非本次问题追加进台账而非混入本 change。
 
 > 经验：狗粮测试中 25 处超行长直到评审才发现，本应在 code 的机械化自检拦截。code 没做这道关，本身按 C-GIT-02 记一条流程问题。
 
