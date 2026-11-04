@@ -42,7 +42,7 @@ disable-model-invocation: true
 
 1. **术语表**：访谈中出现的关键名词当场对齐，避免同物异名。模板见 [templates/glossary.md](../../skills/letwork/templates/glossary.md)。
 2. **ADR（架构/决策记录）**：关键取舍一旦拍板立即记录（背景/决定/理由/被否方案/后果），而不是等全部收敛后回忆。模板见 [templates/adr.md](../../skills/letwork/templates/adr.md)。
-3. **异步问卷**：遇到「需要问没在场的人（运维/甲方/家人/老板）」的决策时，生成结构化问卷：发给谁、要拿回什么信息、问题按重要度排序、每个问题的选项与推荐默认值。模板见 [templates/questionnaire.md](../../skills/letwork/templates/questionnaire.md)。
+3. **异步问卷**：遇到「需要问没在场的人（运维/甲方/家人/老板）」的决策时，按**两步法**——先拷问清楚「发给谁、要拿回什么」（任一答不上来就不发），再动笔写；问题一题只含一个概念（禁止复合题），按 P0/P1/P2 排序，每题给选项与推荐默认，并明确允许对方答「不知道，按推荐来」。模板见 [templates/questionnaire.md](../../skills/letwork/templates/questionnaire.md)。
 
 ## 结束
 

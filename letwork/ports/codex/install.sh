@@ -27,6 +27,21 @@ EOF
 }
 
 gen "letworkstart" "route 模式" "routing.md"
+
+# /let-grill 是无 git/openspec 前置的通用拷问，直接读其专属 SKILL
+cat > "$PROMPTS/let-grill.md" <<EOF
+---
+description: letwork 通用拷问（任何想法，不依赖仓库）
+---
+
+对用户的话题发起纯拷问式访谈（设计树/frontier/轮次提问/推荐答案），不要求 git 或 OpenSpec；可按需沉淀术语表/ADR/异步问卷。
+
+Read 并执行：$REPO/skills/let-grill/SKILL.md
+
+用户参数：\$ARGUMENTS
+EOF
+echo "created: /let-grill"
+
 for stage in analyze plan code test review commit retro; do
   gen "let-$stage" "stage:$stage" "$stage.md"
 done

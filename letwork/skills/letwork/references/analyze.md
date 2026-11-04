@@ -17,7 +17,7 @@
 
 1. **术语表 `glossary.md`**（从 [templates/glossary.md](../templates/glossary.md) 复制）：一出现关键名词（各方说法不同、业务/技术术语、缩写）立即加行并在当轮向用户确认定义。后续 spec、类名/变量/表列、日志、review 必须与术语表一致（C-NAMING-02 统一语言）。
 2. **ADR（`adr/NNNN-kebab.md`）**：关键取舍（技术选型、不可逆决策、被否方案有价值时）**拍板当场建**，状态 ACCEPTED，不要等 design.md 写完再回忆。模板见 [templates/adr.md](../templates/adr.md)；design.md 的 Decisions 只写摘要+链接。
-3. **异步问卷（`questionnaires/`）**：遇到「必须问没在场的人」（运维/甲方/DBA/合规）才能定的决策，立即按 [templates/questionnaire.md](../templates/questionnaire.md) 生成问卷（发给谁/拿回什么/按重要度排序/每题推荐默认），相关决策标记等待信息，**不阻塞不相关任务继续**（按 test.md 受阻降级的转任务逻辑处理）。
+3. **异步问卷（`questionnaires/`）**：遇到「必须问没在场的人」（运维/甲方/DBA/合规）才能定的决策，**先拷问 send 两步**（发给谁/要拿回什么，答不上来就不发），再按 [templates/questionnaire.md](../templates/questionnaire.md) 生成问卷；问题一题一概念（禁复合题）、P0/P1/P2 排序、每题推荐默认并允许对方答「不知道」；相关决策标记等待信息，**不阻塞不相关任务继续**（按 test.md 受阻降级的转任务逻辑处理）。
 
 轮次格式：
 

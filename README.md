@@ -8,7 +8,7 @@
 |---|---|---|
 | **letwork** | 基于 OpenSpec 的需求驱动研发流：`/letworkstart` 按仓库现状自动路由，串起 需求分析（grilling 轮次访谈）→ 任务拆分 → 编码 → 测试 → 规范评审 → 按任务提交 → 归档复盘；编码与评审共用一份冻结规范，内置 Java（阿里黄山版）/ Go（Uber）/ Python（Google+PEP）规范库；支持完整流水线，也支持只单独使用其中任意一步 | [letwork/README.md](letwork/README.md) |
 
-## 30 秒安装（letwork 全套 9 个命令）
+## 30 秒安装（letwork 全套 10 个命令）
 
 前置：Claude Code、git；推荐安装 [OpenSpec](https://github.com/Fission-AI/OpenSpec) CLI（非必需，缺失时自动降级为手工维护产物）：
 
@@ -27,7 +27,7 @@ cd ~/devskills
 bash letwork/ports/claude/install.sh
 ```
 
-验证：**新开一个 Claude Code 会话**，输入 `/let` 应补全出 `/letworkstart`、`/let-analyze`、`/let-plan`、`/let-code`、`/let-test`、`/let-review`、`/let-commit`、`/let-retro`。确认版本：`grep '^version:' ~/.claude/skills/letwork/SKILL.md`。
+验证：**新开一个 Claude Code 会话**，输入 `/let` 应补全出 `/let-grill`、`/letworkstart`、`/let-analyze`、`/let-plan`、`/let-code`、`/let-test`、`/let-review`、`/let-commit`、`/let-retro`。确认版本：`grep '^version:' ~/.claude/skills/letwork/SKILL.md`。
 
 > HTTPS 克隆改用 `git clone https://github.com/crazychengmm/devskills.git`。
 > 软链是开发模式：`git pull` 后立即生效，无需重新安装。
@@ -56,6 +56,7 @@ ln -sfn "$PWD/letwork/skills/let-commit" "$HOME/.claude/skills/let-commit"
 
 | 场景 | 命令 |
 |---|---|
+| 拷问一个非软件想法/决策（不要仓库） | `/let-grill 搬家方案怎么选` |
 | 只想把一个新需求访谈清楚并落成文档 | `/let-analyze 给导出接口加 CSV 格式` |
 | 需求已定，只要拆任务 | `/let-plan` |
 | 只按规范实现 tasks.md 中的 2.1 | `/let-code 2.1` |
@@ -86,7 +87,8 @@ devskills/
     │   └── codex/install.sh   # → ~/.codex/prompts
     └── skills/
         ├── letwork/           # 核心引擎 + 阶段规程 + 规范库 + 模板
-        └── letworkstart/ … let-retro/   # 8 个薄包装命令
+        └── let-grill/                    # 通用拷问（无仓库前置）
+            letworkstart/ … let-retro/   # 8 个研发流薄包装命令
 ```
 
 ## 更新与卸载
@@ -96,7 +98,8 @@ devskills/
 cd ~/devskills && git pull && bash letwork/ports/claude/install.sh
 
 # 卸载 letwork 全套
-rm ~/.claude/skills/letwork ~/.claude/skills/letworkstart \
+rm ~/.claude/skills/letwork ~/.claude/skills/let-grill \
+   ~/.claude/skills/letworkstart \
    ~/.claude/skills/let-analyze ~/.claude/skills/let-plan \
    ~/.claude/skills/let-code ~/.claude/skills/let-test \
    ~/.claude/skills/let-review ~/.claude/skills/let-commit \
@@ -105,6 +108,9 @@ rm ~/.claude/skills/letwork ~/.claude/skills/letworkstart \
 
 ## 版本记录
 
+- letwork **v0.16.1**（2026-11-04）：问卷两点减负纪律（先拷问 send 再动笔、单概念题+允许答「不知道」）；Codex/Cursor 安装脚本补 /let-grill；根 README 同步。
+- letwork **v0.16.0**（2026-11-04）：通用 /let-grill 拷问入口（无仓库前置）+ 访谈实时沉淀（术语表/ADR/异步问卷）。
+- letwork **v0.15.1**（2026-11-04）：批量编排反例（管道吞退出码/跨目录 discover）。
 - letwork **v0.15.0**（2026-11-04）：既存项目进场摸底——架构画像 + 既存问题台账，欠债随关联模块开发复现提示。
 - letwork **v0.14.0**（2026-11-03）：Go HTTP/多 change 并行/时间注入/skip_specs 首次覆盖；多 change 自主路由、时钟注入、冒烟就绪轮询。
 - letwork **v0.13.0**（2026-11-02）：5 项目批量狗粮（首次覆盖 Go/并发）——gofmt 自动格式化、并发测试 -race 规则、环境限流不计入修复预算、Go 工程初始化。

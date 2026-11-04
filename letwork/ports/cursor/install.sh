@@ -9,14 +9,24 @@ CURSOR_COMMANDS="$HOME/.cursor/commands"
 
 mkdir -p "$CURSOR_SKILLS" "$CURSOR_COMMANDS"
 
-# 1) 9 个 skill（核心 letwork + 8 个阶段包装）软链到 Cursor skills
+# 1) 全部 skill 软链到 Cursor skills（数量随 skills/ 目录自动变化）
 for d in "$SKILLS_SRC"/*/; do
   name="$(basename "$d")"
   ln -sfn "$d" "$CURSOR_SKILLS/$name"
   echo "linked skill: $name"
 done
 
-# 2) 生成 8 个斜杠命令（Cursor commands/*.md，$ARGUMENTS 透传用户输入）
+# 2) 通用拷问命令（无 git/openspec 前置，读其专属 SKILL）
+cat > "$CURSOR_COMMANDS/let-grill.md" <<EOF
+---
+description: letwork 通用拷问（任何想法，不依赖仓库）
+---
+
+对用户的话题发起纯拷问式访谈，按需沉淀术语表/ADR/异步问卷。Read 并执行：$REPO/skills/let-grill/SKILL.md。用户参数：\$ARGUMENTS
+EOF
+echo "created command: /let-grill"
+
+# 3) 生成研发流斜杠命令（Cursor commands/*.md，$ARGUMENTS 透传用户输入）
 for stage in start analyze plan code test review commit retro; do
   if [ "$stage" = "start" ]; then
     mode="route（检查仓库现状并自动路由）"
