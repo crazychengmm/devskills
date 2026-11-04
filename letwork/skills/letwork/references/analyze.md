@@ -11,6 +11,14 @@
 - 一轮结束后等用户回答（可按编号简答），根据回答重算 frontier，进入下一轮。
 - frontier 清空且用户确认「需求已经清楚」后才动手写产物。
 
+### 访谈中实时沉淀（不要事后补）
+
+每轮访谈之间维护 `openspec/letwork/` 下三份演进文档：
+
+1. **术语表 `glossary.md`**（从 [templates/glossary.md](../templates/glossary.md) 复制）：一出现关键名词（各方说法不同、业务/技术术语、缩写）立即加行并在当轮向用户确认定义。后续 spec、类名/变量/表列、日志、review 必须与术语表一致（C-NAMING-02 统一语言）。
+2. **ADR（`adr/NNNN-kebab.md`）**：关键取舍（技术选型、不可逆决策、被否方案有价值时）**拍板当场建**，状态 ACCEPTED，不要等 design.md 写完再回忆。模板见 [templates/adr.md](../templates/adr.md)；design.md 的 Decisions 只写摘要+链接。
+3. **异步问卷（`questionnaires/`）**：遇到「必须问没在场的人」（运维/甲方/DBA/合规）才能定的决策，立即按 [templates/questionnaire.md](../templates/questionnaire.md) 生成问卷（发给谁/拿回什么/按重要度排序/每题推荐默认），相关决策标记等待信息，**不阻塞不相关任务继续**（按 test.md 受阻降级的转任务逻辑处理）。
+
 轮次格式：
 
 ```
@@ -79,10 +87,12 @@ Mermaid 自检（写完预览顺手做）：代码围栏 ``` 必须成对；流�
    - 只是内部实现/重构、无外部行为变化 → 不列 capability，改在 `.openspec.yaml` 设 `skip_specs: true`。
 2. **specs/<capability>/spec.md delta**：每个 capability 的需求用 SHALL/MUST 写成可验证条款，每条至少一个 `#### Scenario:`，场景必须有 WHEN/GIVEN 与 THEN；写**可观察行为与契约**，实现机制放 design.md。**新 capability 必须在 delta 顶部写 `## Purpose`**（≥50 字符，一两句话说明该能力为何存在），否则 archive 后主 spec 会留下 `TBD - created by archiving change ...` 占位。
 3. **design.md**：OpenSpec 工作流中 design 是 tasks 的前置产物（`openspec status` 中 tasks 依赖 design），所以每个 change 都要写；内容可短，简单需求每个小节一两句即可，但 Context / Goals / Non-Goals / Decisions / Risks 结构保持完整。
-4. **journal.md**：每个关键取舍追加 `[DECISION]`；访谈中发现的现状问题追加 `[PROBLEM]`。
+4. **journal.md**：每个关键取舍追加 `[DECISION]`（并链到对应 ADR）；访谈中发现的现状问题追加 `[PROBLEM]`。
+5. **glossary.md / adr/ / questionnaires/**（按需）：术语表、关键决策 ADR、发出的异步问卷，均在访谈过程中持续维护，不是归档前补写。
 
 ## 4. 完成门禁
 
 - `openspec validate <name>` 通过（CLI 不可用时走人工自检清单）。
 - 向用户复述：capability 列表 + 每条 requirement 的一句话摘要 + Non-Goals，等明确确认。
+- glossary 中的关键术语在 spec 中用词一致；关键取舍都有 ADR；待外部信息的问卷已列出且明确哪些决策被挂起。
 - 用户要求改动时迭代 spec 再重新 validate，不带着未确认需求进 plan。

@@ -1,12 +1,12 @@
 ---
 name: letwork
-version: 0.15.1
+version: 0.16.0
 description: 基于 OpenSpec 的需求驱动研发流程引擎。当用户要分析需求（用轮次访谈逼问清楚）、把需求拆成开发任务、按任务逐个编码/测试/评审/提交代码、记录过程中的问题与改进、继续或归档一个 OpenSpec change 时使用；也在被 /letworkstart、/let-analyze、/let-plan、/let-code、/let-test、/let-review、/let-commit、/let-retro 调用时使用。
 ---
 
 # letwork — OpenSpec 需求驱动研发流
 
-> **版本 v0.15.1**（版本号是唯一事实源，位于本文件 frontmatter；被问「当前版本」时直接读这里，变更历史见仓库 README）。升级后需新开会话才保证加载最新内容。
+> **版本 v0.16.0**（版本号是唯一事实源，位于本文件 frontmatter；被问「当前版本」时直接读这里，变更历史见仓库 README）。升级后需新开会话才保证加载最新内容。
 
 把「需求分析 → 任务拆分 → 编码 → 测试 → 评审 → 按任务提交 → 归档复盘」串成一条流水线。每个需求是 OpenSpec 的一个 change，全过程产物都记录在该 change 目录下。
 
@@ -44,7 +44,7 @@ OpenSpec v1.16 的命令、模板格式与校验红线见 [openspec-cheats.md](r
 ## 铁律（所有阶段都生效）
 
 1. **事实自查，决策问人；方案先预览后细化**：能用工具查到的（文件、代码、命令结果、文档）自己查，可派子 agent 并行查；只有取舍与产品决策才问用户。提问沿用 grilling 的 frontier/轮次方式，并给推荐答案。非平凡产物先出一页**方案预览（Markdown+Mermaid，letwork/preview.md）经用户确认，再展开正式文档/代码/长报告**，避免错方向浪费 token；平凡任务（小 bugfix/文案）说明理由后可跳过。用户说「不用问/你决定/继续」视为对**本次任务所有确认门禁的一次性豁免**：预览等产物仍照常产出（供回看），但不停下等待、按推荐方案推进，并在 journal 记一条豁免决定；豁免只限当前任务，不延续到下一 change。
-2. **每步留痕**：每个阶段的关键决策、问题、改进都追加到该 change 的 `letwork/journal.md`（格式见 [templates/journal.md](templates/journal.md)）。
+2. **每步留痕，决策即沉淀**：关键取舍**访谈拍板当场写 ADR**（`letwork/adr/`，不事后回忆）；领域名词当场进**术语表**（`letwork/glossary.md`，spec/代码/表列共用统一语言）；需要外部人拍板的决策生成**异步问卷**（`letwork/questionnaires/`）并挂起相关决策、不阻塞无关任务；过程问题/阶段流转追加到 `letwork/journal.md`。模板见 templates/ 目录。
 3. **按任务推进与提交**：一次只做一个任务；任务完成且测试为绿后**主动规划分批提交**，不要被动等待。每个 commit 都必须是**绿色提交**——checkout 出来可编译、测试通过（半成品只留工作树）；按任务选择性暂存（禁止 `git add -A`/`git add .`），工作树有半成品时用 `git stash --keep-index` 只验证暂存快照；提交前展示分批方案与暂存清单并经用户确认；不自动 push。每个任务先过机械化自检（格式/编译/lint，见 code.md）再勾选；测试判定只认真实退出码（管道不吞失败，见 test.md）。详见 [commit.md](references/commit.md)。
 4. **规范单一事实源**：coding 与 review 使用同一份冻结在项目内的规范（`openspec/standards/`），review 结论必须引用规则 ID。未冻结规范不得进入 code。
 5. **门禁不过不推进，但有重试预算**：校验失败、测试失败、review 有 BLOCKER 时先停在当前阶段修复；**同一问题修复重试 ≤5 轮**（一次「改代码→重跑门禁」算一轮，纯读日志/查文档不计入但也不许无限调查）。第 5 轮仍不过则进入**受阻降级**：

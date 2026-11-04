@@ -34,12 +34,13 @@
 
 | 命令 | 作用 | 单独使用的最低前置 |
 |---|---|---|
+| `/let-grill [话题]` | **通用拷问**：对任何想法（不限软件，商业/生活决策均可）轮次访谈逼清楚；可选沉淀术语表/ADR/问卷 | **无** |
 | `/letworkstart` | 总入口：检查仓库现状，自动路由到当前阶段（可随时中途续跑） | git 仓库 |
-| `/let-analyze [需求描述]` | 需求分析：grilling 访谈 → proposal + spec delta + design | git 仓库（无 openspec 会引导初始化） |
+| `/let-analyze [需求描述]` | 需求分析：grilling 访谈（实时维护术语表/ADR/问卷）→ proposal + spec delta + design | git 仓库（无 openspec 会引导初始化） |
 | `/let-plan` | 任务拆分：生成可独立实现/测试/提交的 tasks.md | 已有确认过的 change |
 | `/let-code [任务号]` | 编码：一次一个任务，开工前冻结代码规范，机械化自检 | tasks.md 存在 |
 | `/let-test` | 运行当前任务相关测试并记录真实证据 | 当前任务已有实现 |
-| `/let-review` | 双轴评审：代码规范符合度 + spec/场景一致性 | 有提交或待评审 diff |
+| `/let-review` | 三轴评审：规范 + spec 一致性 + 设计优化 | 有提交或待评审 diff |
 | `/let-commit [步骤说明]` | 按任务提交（禁止全量 add）；带步骤说明时为简单步骤单提 | 有已完成的任务/步骤 |
 | `/let-retro [内容]` | 记录问题/决策/改进；归档前自动汇总复盘 | 无（随时可用） |
 
@@ -370,6 +371,8 @@ skills/
 
 ## 版本记录
 
+- **v0.16.0**（2026-11-04）：新增通用拷问命令 `/let-grill`（无 git/openspec 前置，任何想法可拷问）；analyze 访谈中实时沉淀——术语表 `glossary.md`（统一语言）、决策当场落 `adr/`、外部信息差转 `questionnaires/` 异步问卷（挂起决策不阻塞无关任务）；三个新模板；AGENTS.md 同步。
+- **v0.15.1**（2026-11-04）：批量编排反例（管道吞退出码/跨目录 discover）。
 - **v0.15.0**（2026-11-04）：**既存项目进场摸底（intake）**——已有代码的仓库首次 coding 前先产出 `project-profile.md`（架构 Mermaid/代码风格/模块职责/构建命令）与 `debt-backlog.md`（既存问题台账），问题逐条由用户决定修或暂缓；暂缓欠债在相关模块的新 change 中自动复现提示，修复后闭环；默认入乡随俗。在真实 15 模块项目 autoop 上验证。
 - **v0.14.0**（2026-11-03）：Go HTTP 服务 + 多 change 并行 + 时间注入 + skip_specs 四项首次覆盖——routing 增加多 change 自主选择规则（受阻→最早→进度）；test.md 增加时间相关代码注入时钟（禁真实 sleep）与 HTTP 冒烟就绪轮询（禁固定 sleep，000 假失败实证）；cheats 补 skip_specs 端到端做法。
 - **v0.13.0**（2026-11-02）：5 项目批量（Java×1/Python×2/Go×2 首次）狗粮回灌——Go 机械检查改为先 `gofmt -w` 自动格式化再验证；test.md 新增并发代码测试规则（`-race`、禁 sleep 同步、CAS、channel 信号、背压突发语义）；环境限流（429/registry 超时）不消耗代码修复 5 轮预算，按 Retry-After 重试；bootstrap 补 `go mod init` 等语言工程初始化。

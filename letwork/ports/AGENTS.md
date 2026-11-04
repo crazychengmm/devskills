@@ -22,6 +22,8 @@
 
 ### 1. analyze（需求分析）
 - 用 grilling 访谈：把需求建模成决策树，一轮问完当前所有「前置已决」的问题，编号 Q1..Qn，每题给推荐答案（用户答 yes 即采纳）。事实类问题自己查文件/代码，只有取舍类决策问用户。
+- **访谈中实时沉淀（不事后补）**：关键名词当场进 `openspec/letwork/glossary.md`（统一语言，spec/代码/表列共用）；关键取舍拍板当场写 `openspec/letwork/adr/NNNN-*.md`；需问没在场的人（运维/甲方）时生成 `openspec/letwork/questionnaires/` 结构化问卷（发给谁/拿回什么/按重要度/推荐默认），挂起相关决策但不阻塞无关任务。
+- 纯拷问非软件事务或只想先把一件事想清楚时，使用 skill 的 `let-grill` 模式（无 git/openspec 前置）。
 - 创建 change：`openspec new change <kebab-name> --description "<一句话>"`（**flag 与值间必须有空格**；创建后确认 `.openspec.yaml` 存在）。
 - 产出 proposal.md（Why ≥50 字符）、`specs/<capability>/spec.md`（**新 capability 顶部写 `## Purpose`**；需求用 SHALL/MUST，每条至少一个 WHEN/THEN 场景）、design.md（必备，可短）。
 - `openspec validate <name>` 通过后请用户确认。
@@ -76,4 +78,4 @@
 
 ## 铁律
 
-1. 事实自查，决策问人；2. 每步留痕；3. 按任务推进与提交；4. coding/review 只用项目内冻结的同一份规范；5. 门禁不过不推进；6. 失败如实报告，不把没跑过的测试说成通过；7. 不自动 push、不做破坏性/对外动作（安装、初始化、归档先征得同意）；8. OpenSpec 产物只写官方格式，本流程私有记录只放 change 下的 `letwork/` 子目录。
+1. 事实自查，决策问人，决策即沉淀（ADR/术语表/问卷）；2. 每步留痕；3. 按任务推进与提交；4. coding/review 只用项目内冻结的同一份规范，命名遵循 glossary；5. 门禁不过不推进；6. 失败如实报告，不把没跑过的测试说成通过；7. 不自动 push、不做破坏性/对外动作（安装、初始化、归档先征得同意）；8. OpenSpec 产物只写官方格式，本流程私有记录只放 change/letwork 目录（项目级术语表/ADR 在 `openspec/letwork/` 下）。
