@@ -6,6 +6,9 @@
 
 ## 1. 只读调查（先事实后判断，控制深度）
 
+装有 codebase-memory-mcp（CBM）时，模块依赖/影响面/调用链优先查持久化知识图谱（见 [mcp-integration.md](mcp-integration.md)），并与实际抽读文件交叉验证（图谱可能滞后）；小项目（<20 源文件）直接 grep 即可。
+
+
 不要一上来通读全部代码，按以下顺序快速建立全貌（单项目调查控制在 ~20 个文件以内）：
 
 1. **构建与依赖**：pom.xml/build.gradle/go.mod/requirements.txt/pyproject.toml/package.json——语言、框架、构建/测试命令、过时或冲突依赖。

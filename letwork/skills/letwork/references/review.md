@@ -1,6 +1,6 @@
 # review — 代码评审阶段
 
-三轴评审（规范 / spec 一致性 / 设计模式优化）+ OpenSpec 校验，结论写入 git notes。先读 [standards/review-format.md](standards/review-format.md) 拿到级别定义与报告格式。
+三轴评审（规范 / spec 一致性 / 设计模式优化）+ OpenSpec 校验，结论写入 git notes。先读 [standards/review-format.md](standards/review-format.md) 拿到级别定义与报告格式。装有 serena/CBM 时用符号/影响面查询辅助取证，规则见 [mcp-integration.md](mcp-integration.md)，MCP 输出不能替代编译与测试事实。
 
 ## 1. 确定评审范围（diff base）
 

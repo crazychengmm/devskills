@@ -30,6 +30,9 @@
 
 ## 3. 单任务循环
 
+> 装有 serena / codebase-memory-mcp 等 MCP 时，符号核实与影响面查询优先用 MCP（分工与降级见 [mcp-integration.md](mcp-integration.md)）；编译/lint 门禁仍只认原生命令结果。
+
+
 对「下一个未勾选任务」（用户指定了任务号则用指定的）：
 
 0. **工具链预检（第一个编码任务前做一次，切换技术栈时重做）**：先确认解释器/编译器/构建工具真实可用（`python3 --version`、`go version`、`java -version`/`mvn -v`）。不可用就先解决或换栈；**不要在工具链未验证前写实现文件**——曾出现 Go 不可用导致半成品 .go 文件残留、之后被误带入提交的事故。
