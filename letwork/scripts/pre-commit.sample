@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+# letwork 建议的 pre-commit 钩子（机器级兜底，不替代 skill 的确认流程）。
+# 安装：cp scripts/pre-commit.sample <repo>/.git/hooks/pre-commit && chmod +x
+# 钩子按项目语言自动选择最小构建门禁；不通过则中止本次提交。
+set -euo pipefail
+
+if [ -f pom.xml ]; then
+  echo "[pre-commit] mvn -q test"
+  mvn -q test
+elif [ -f go.mod ]; then
+  echo "[pre-commit] gofmt + vet + build + test"
+  test -z "$(gofmt -l .)"
+  go vet ./...
+  go build ./...
+  go test ./... -count=1
+elif [ -f pyproject.toml ] || [ -d tests ] || [ -d test ]; then
+  echo "[pre-commit] py_compile + unittest"
+  python3 -m compileall -q .
+  if [ -d tests ]; then python3 -m unittest discover -s tests; fi
+elif [ -f package.json ]; then
+  echo "[pre-commit] npm run build"
+  npm run build
+else
+  echo "[pre-commit] 未识别的项目类型，跳过（请在 skill 流程中人工确认门禁）"
+fi

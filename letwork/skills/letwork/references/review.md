@@ -13,15 +13,16 @@
 
 ## 1b. 第零轴：机械化检查（最便宜，先清零）
 
-先跑零思考成本的机械检查，有失败直接退回 code 修复后重跑，不带着机械问题做人工评审：
+默认顺序 code→review→test：评审发生在测试编写**之前**，因此本轴门禁只到**编译/构建通过 + 格式/lint 干净**，不要求测试通过（测试是下一阶段）。有失败直接退回 code 修复后重跑，不带着机械问题做人工评审：
 
 - Python：`python3 -m py_compile`；行长（awk/ruff/flake8/black --check，阈值按项目配置）；项目有 ruff/flake8 配置时跑全量。
 - Go：`gofmt -l .`（必须空输出）、`go vet ./...`、`go build ./...`。
 - Java：`mvn -q compile`（或 gradle），项目配了 checkstyle/spotless 必须跑。
 - 通用：`git diff --check`（冲突标记/尾随空白）。
+- TDD 项目（测试已存在）：额外要求全量测试通过。
 - **既存欠债**：若 `openspec/letwork/debt-backlog.md` 存在，检查本次 diff 是否触及条目关联文件；决定本次修的验证修复并准备关闭，继续暂缓的在报告 INFO 区注明「已知欠债，见 DEBT-xxx」；新发现的非本次问题追加进台账而非混入本 change。
 
-> 经验：狗粮测试中 25 处超行长直到评审才发现，本应在 code 的机械化自检拦截。code 没做这道关，本身按 C-GIT-02 记一条流程问题。
+> 此时修复成本仍低（测试尚未编写）。轴二在默认顺序下检查**测试计划覆盖度**（每个 Scenario 在 tasks 中有对应测试任务），测试执行证据在 test 阶段补齐。
 
 ## 2. 轴一：规范符合度
 

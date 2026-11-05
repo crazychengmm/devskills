@@ -1,12 +1,12 @@
 ---
 name: letwork
-version: 0.16.1
+version: 0.17.1
 description: 基于 OpenSpec 的需求驱动研发流程引擎。当用户要分析需求（用轮次访谈逼问清楚）、把需求拆成开发任务、按任务逐个编码/测试/评审/提交代码、记录过程中的问题与改进、继续或归档一个 OpenSpec change 时使用；也在被 /letworkstart、/let-analyze、/let-plan、/let-code、/let-test、/let-review、/let-commit、/let-retro 调用时使用。
 ---
 
 # letwork — OpenSpec 需求驱动研发流
 
-> **版本 v0.16.1**（版本号是唯一事实源，位于本文件 frontmatter；被问「当前版本」时直接读这里，变更历史见仓库 README）。升级后需新开会话才保证加载最新内容。
+> **版本 v0.17.1**（版本号是唯一事实源，位于本文件 frontmatter；被问「当前版本」时直接读这里，变更历史见仓库 README）。升级后需新开会话才保证加载最新内容。
 
 把「需求分析 → 任务拆分 → 编码 → 测试 → 评审 → 按任务提交 → 归档复盘」串成一条流水线。每个需求是 OpenSpec 的一个 change，全过程产物都记录在该 change 目录下。
 
@@ -30,12 +30,14 @@ description: 基于 OpenSpec 的需求驱动研发流程引擎。当用户要分
 |---|---|---|---|
 | intake（仅既存项目） | 进场摸底：架构画像 + 代码风格 + 模块职责 + 既存问题确认 | project-profile.md 落盘；既存问题逐条有用户决定（修/暂缓） | [intake.md](references/intake.md) |
 | analyze | grilling 访谈 → **方案预览 preview.md（Markdown+Mermaid，用户确认）** → 关联欠债提示 → proposal + specs delta（含 Purpose）+ design | 预览经用户确认；相关 backlog 条目已提示；`openspec validate <change>` 通过 | [analyze.md](references/analyze.md) |
-| plan | 拆任务到 tasks.md，任务与 requirement 双向可追溯 | 任务粒度 ≤ 半天、可独立测试；validate 通过；用户确认 | [plan.md](references/plan.md) |
-| code | 一次一个任务：加载规范 → 实现 → 自检 → 勾选 | 规范已冻结；当前任务自检过；tasks.md 勾选 | [code.md](references/code.md) |
-| test | 运行当前任务相关测试，记录证据 | 测试通过；命令与结果记入 journal；失败回 code | [test.md](references/test.md) |
-| review | 三轴评审：规范符合度 + spec/场景一致性 + 设计模式优化；报告写入 change；git notes/PR 评论为用户可选项 | 无 BLOCKER；`validate --strict` 通过；报告落盘 | [review.md](references/review.md) |
-| commit | 分批选择性提交；每批是可编译可测的绿色提交，Conventional Commits，记账 | 编译+测试在暂存快照上为绿；方案与暂存清单经用户确认；SHA 登入 commits.md | [commit.md](references/commit.md) |
+| plan | 拆任务到 tasks.md，任务与 requirement 双向可追溯 | 任务粒度 ≤ 半天；validate 通过；用户确认 | [plan.md](references/plan.md) |
+| code | 按任务实现全部功能；**本阶段只做编译/构建级自检，不写不跑测试** | 规范已冻结；无编译错误；tasks.md 实现类任务勾选 | [code.md](references/code.md) |
+| review | 代码全部写完后：三轴评审 + 设计优化；此时基线只需编译通过 | 无 BLOCKER；`validate --strict` 通过；优化项有处置决定 | [review.md](references/review.md) |
+| test | **review 后、代码已全部写完才进入**：集中编写并运行测试，失败回 code 修复 | 全量测试通过；证据记入 journal | [test.md](references/test.md) |
+| commit | 分批选择性提交：code 阶段提交编译绿，test 阶段起提交测试绿；两级确认 | 见 commit.md 两级门禁；SHA 登入 commits.md | [commit.md](references/commit.md) |
 | retro | 记录问题/决策/改进；归档前汇总 | journal 已追加；归档前有汇总条目 | [retro.md](references/retro.md) |
+
+> **阶段顺序纪律（默认流程）**：code → review → test，测试在代码全部写完并评审后集中进行，不在每个任务后即测。偏好 TDD 的项目可在项目 `openspec/config.yaml` 声明 `test_strategy: tdd` 切回「每任务即测」；两种模式下 test 阶段之后的提交都必须测试绿。
 
 全部任务完成、review 与 validate 通过后，提示用户归档（`openspec archive <change>`），归档前未做 retro 则先补一次。
 
@@ -43,9 +45,9 @@ OpenSpec v1.16 的命令、模板格式与校验红线见 [openspec-cheats.md](r
 
 ## 铁律（所有阶段都生效）
 
-1. **事实自查，决策问人；方案先预览后细化**：能用工具查到的（文件、代码、命令结果、文档）自己查，可派子 agent 并行查；只有取舍与产品决策才问用户。提问沿用 grilling 的 frontier/轮次方式，并给推荐答案。非平凡产物先出一页**方案预览（Markdown+Mermaid，letwork/preview.md）经用户确认，再展开正式文档/代码/长报告**，避免错方向浪费 token；平凡任务（小 bugfix/文案）说明理由后可跳过。用户说「不用问/你决定/继续」视为对**本次任务所有确认门禁的一次性豁免**：预览等产物仍照常产出（供回看），但不停下等待、按推荐方案推进，并在 journal 记一条豁免决定；豁免只限当前任务，不延续到下一 change。
+1. **事实自查，决策问人；方案先预览后细化**：能用工具查到的（文件、代码、命令结果、文档）自己查，可派子 agent 并行查；只有取舍与产品决策才问用户。提问沿用 grilling 的 frontier/轮次方式，并给推荐答案。非平凡产物先出一页**方案预览（Markdown+Mermaid，letwork/preview.md）经用户确认，再展开正式文档/代码/长报告**，避免错方向浪费 token；平凡任务（小 bugfix/文案）说明理由后可跳过。用户说「不用问/你决定/继续」视为对**本次任务确认门禁的一次性豁免**（预览等待、方案选择等）：产物仍照常产出（供回看），按推荐方案推进，并在 journal 记一条豁免决定；**但 git 本地提交与远端推送不在豁免范围**（见铁律 3，必须各自明确确认）；豁免只限当前任务，不延续到下一 change。
 2. **每步留痕，决策即沉淀**：关键取舍**访谈拍板当场写 ADR**（`letwork/adr/`，不事后回忆）；领域名词当场进**术语表**（`letwork/glossary.md`，spec/代码/表列共用统一语言）；需要外部人拍板的决策生成**异步问卷**（`letwork/questionnaires/`）并挂起相关决策、不阻塞无关任务；过程问题/阶段流转追加到 `letwork/journal.md`。模板见 templates/ 目录。
-3. **按任务推进与提交**：一次只做一个任务；任务完成且测试为绿后**主动规划分批提交**，不要被动等待。每个 commit 都必须是**绿色提交**——checkout 出来可编译、测试通过（半成品只留工作树）；按任务选择性暂存（禁止 `git add -A`/`git add .`），工作树有半成品时用 `git stash --keep-index` 只验证暂存快照；提交前展示分批方案与暂存清单并经用户确认；不自动 push。每个任务先过机械化自检（格式/编译/lint，见 code.md）再勾选；测试判定只认真实退出码（管道不吞失败，见 test.md）。详见 [commit.md](references/commit.md)。
+3. **按任务推进与提交；git 动作强制确认 + 编译门禁**：一次只做一个任务；任务完成且测试为绿后**主动规划分批提交**。每个 commit 都必须是**绿色提交**——checkout 出来可编译、测试通过（半成品只留工作树）；按任务选择性暂存（禁止 `git add -A`/`git add .`），工作树有半成品时用 `git stash --keep-index` 只验证暂存快照。**本地 `git commit` 与远端 `git push` 是两级独立确认**：分别展示「文件/message/验证证据」与「待推提交/最新完整构建结果」，用户明确同意才执行；这两个动作**不被「不用问我/你决定」豁免**。push 前必须再完整跑一次构建+测试。禁止 `--no-verify`/删测试装绿，5 轮不过走 `[STALLED]`。详见 [commit.md 第 0 节](references/commit.md)。
 4. **规范单一事实源**：coding 与 review 使用同一份冻结在项目内的规范（`openspec/standards/`），review 结论必须引用规则 ID。未冻结规范不得进入 code。
 5. **门禁不过不推进，但有重试预算**：校验失败、测试失败、review 有 BLOCKER 时先停在当前阶段修复；**同一问题修复重试 ≤5 轮**（一次「改代码→重跑门禁」算一轮，纯读日志/查文档不计入但也不许无限调查）。第 5 轮仍不过则进入**受阻降级**：
    1. journal 追加 `[STALLED]` 条目：现象、5 轮尝试各自做了什么、根因假设、止血方式、需要人介入的具体事项；

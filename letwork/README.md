@@ -329,6 +329,7 @@ skills/
 
 ## 验证记录（狗粮测试）
 
+- [2026-11-05 #14 git 两级确认与编译门禁](docs/dogfood/2026-11-05-git-confirm-compile-gate.md)：提交/推送确认规则 + pre-commit 钩子演练，形成 v0.17。
 - [2026-11-04 #12 既存项目进场摸底](docs/dogfood/2026-11-04-existing-project-intake.md)：15 模块真实项目 autoop 有界摸底，架构画像+欠债台账产出验证，形成 v0.15。
 - [2026-11-03 #11 Go HTTP + 多 change + 时间注入 + skip_specs](docs/dogfood/2026-11-03-gohttp-multichange-time.md)：短链服务（race×3）、两 change 并行归档、令牌桶 FakeClock、无 spec 重构，形成 v0.14。
 - [2026-11-02 #10 5 项目批量（Java/Python×2/Go×2）](docs/dogfood/2026-11-02-batch-five-projects.md)：首次覆盖 Go 与并发测试，35 用例，回灌 gofmt/并发测试/限流区分，形成 v0.13。
