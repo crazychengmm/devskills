@@ -1,12 +1,12 @@
 ---
 name: letwork
-version: 0.18.0
+version: 0.19.0
 description: 基于 OpenSpec 的需求驱动研发流程引擎。当用户要分析需求（用轮次访谈逼问清楚）、把需求拆成开发任务、按任务逐个编码/测试/评审/提交代码、记录过程中的问题与改进、继续或归档一个 OpenSpec change 时使用；也在被 /letworkstart、/let-analyze、/let-plan、/let-code、/let-test、/let-review、/let-commit、/let-retro 调用时使用。
 ---
 
 # letwork — OpenSpec 需求驱动研发流
 
-> **版本 v0.18.0**（版本号是唯一事实源，位于本文件 frontmatter；被问「当前版本」时直接读这里，变更历史见仓库 README）。升级后需新开会话才保证加载最新内容。
+> **版本 v0.19.0**（版本号是唯一事实源，位于本文件 frontmatter；被问「当前版本」时直接读这里，变更历史见仓库 README）。升级后需新开会话才保证加载最新内容。
 
 把「需求分析 → 任务拆分 → 编码 → 测试 → 评审 → 按任务提交 → 归档复盘」串成一条流水线。每个需求是 OpenSpec 的一个 change，全过程产物都记录在该 change 目录下。
 
@@ -46,19 +46,22 @@ OpenSpec v1.16 的命令、模板格式与校验红线见 [openspec-cheats.md](r
 
 ## 铁律（所有阶段都生效）
 
+0. **多事项先清单、逐项闭环**：用户一次交代多件事时，先整理成带编号的事项清单（开发类映射进 tasks.md，杂项在对话中显式列出状态），按顺序一项一项完成，每项完成即更新状态并简要汇报，不跳项、不并行混做。单项改动较大时，**主动提示是否做一次本地小版本提交**（只到本地 git，不涉及远端；用户同意才提交），push 永远单独确认。
+
 1. **事实自查，决策问人；方案先预览后细化**：能用工具查到的（文件、代码、命令结果、文档）自己查，可派子 agent 并行查；只有取舍与产品决策才问用户。提问沿用 grilling 的 frontier/轮次方式，并给推荐答案。非平凡产物先出一页**方案预览（Markdown+Mermaid，letwork/preview.md）经用户确认，再展开正式文档/代码/长报告**，避免错方向浪费 token；平凡任务（小 bugfix/文案）说明理由后可跳过。用户说「不用问/你决定/继续」视为对**本次任务确认门禁的一次性豁免**（预览等待、方案选择等）：产物仍照常产出（供回看），按推荐方案推进，并在 journal 记一条豁免决定；**但 git 本地提交与远端推送不在豁免范围**（见铁律 3，必须各自明确确认）；豁免只限当前任务，不延续到下一 change。
 2. **每步留痕，决策即沉淀**：关键取舍**访谈拍板当场写 ADR**（`letwork/adr/`，不事后回忆）；领域名词当场进**术语表**（`letwork/glossary.md`，spec/代码/表列共用统一语言）；需要外部人拍板的决策生成**异步问卷**（`letwork/questionnaires/`）并挂起相关决策、不阻塞无关任务；过程问题/阶段流转追加到 `letwork/journal.md`。模板见 templates/ 目录。
 3. **按任务推进与提交；git 动作强制确认 + 编译门禁**：一次只做一个任务；任务完成且测试为绿后**主动规划分批提交**。每个 commit 都必须是**绿色提交**——checkout 出来可编译、测试通过（半成品只留工作树）；按任务选择性暂存（禁止 `git add -A`/`git add .`），工作树有半成品时用 `git stash --keep-index` 只验证暂存快照。**本地 `git commit` 与远端 `git push` 是两级独立确认**：分别展示「文件/message/验证证据」与「待推提交/最新完整构建结果」，用户明确同意才执行；这两个动作**不被「不用问我/你决定」豁免**。push 前必须再完整跑一次构建+测试。禁止 `--no-verify`/删测试装绿，5 轮不过走 `[STALLED]`。详见 [commit.md 第 0 节](references/commit.md)。
-4. **规范单一事实源**：coding 与 review 使用同一份冻结在项目内的规范（`openspec/standards/`），review 结论必须引用规则 ID。未冻结规范不得进入 code。
-5. **门禁不过不推进，但有重试预算**：校验失败、测试失败、review 有 BLOCKER 时先停在当前阶段修复；**同一问题修复重试 ≤5 轮**（一次「改代码→重跑门禁」算一轮，纯读日志/查文档不计入但也不许无限调查）。第 5 轮仍不过则进入**受阻降级**：
+4. **规范单一事实源；不变原则另立**：coding 与 review 使用同一份冻结在项目内的规范（`openspec/standards/`），review 结论必须引用规则 ID。未冻结规范不得进入 code。项目级长期不变的价值观/硬约束写在 `openspec/letwork/principles.md`（从 [templates/principles.md](templates/principles.md) 初始化），跨 change 生效、用户可修改、skill 只读不覆盖；具体技术选型仍走 ADR。
+5. **设计优先（涉及算法/模式时）**：功能涉及算法或设计模式时，先在预览/design 中对齐「什么场景用什么模式/算法、解决什么问题、代价是什么」，用户确认并落 ADR 后再写实现；编码先搭抽象骨架（接口/模型/签名）再填细节，重复结构先抽象。详见 [references/design-alignment.md](references/design-alignment.md)。
+6. **门禁不过不推进，但有重试预算**：校验失败、测试失败、review 有 BLOCKER 时先停在当前阶段修复；**同一问题修复重试 ≤5 轮**（一次「改代码→重跑门禁」算一轮，纯读日志/查文档不计入但也不许无限调查）。第 5 轮仍不过则进入**受阻降级**：
    1. journal 追加 `[STALLED]` 条目：现象、5 轮尝试各自做了什么、根因假设、止血方式、需要人介入的具体事项；
    2. **先止血让编译/构建恢复绿色**：首选 `git stash`/还原本批改动回到最近绿色提交；次选显式跳过失败测试（`@Disabled`/`@pytest.mark.skip`，reason 必填并指向该 journal 条目）或最小桩实现；禁止删断言、空 catch、静默 suppress 后假装通过；
    3. 然后**可以转去做不依赖该问题的其他任务**，但必须先告知用户；没有不相关任务可做时停下等介入；
    4. 受阻 change 在 routing 中持续显示为受阻（未关闭的 `[STALLED]`），后续会话不得忽略；问题解决后补测试、移除 skip、关闭条目。
    细则见 test.md「重试预算与受阻降级」。
-6. **如实报告**：命令失败就贴失败信息，不许把没跑过的测试说成通过；改动外的破坏性/对外动作先征得用户同意。
-7. **不与 OpenSpec 抢所有权**：proposal/design/tasks/spec delta 只写 OpenSpec 规定格式；本 skill 自己的记录只放 change 下的 `letwork/` 子目录。
-8. **语言**：与用户交流、journal、review 报告用中文；proposal/spec 等 OpenSpec 产物遵循项目 `openspec/config.yaml` 的 product language 约定（无约定则中文）。
+7. **如实报告**：命令失败就贴失败信息，不许把没跑过的测试说成通过；改动外的破坏性/对外动作先征得用户同意。
+8. **不与 OpenSpec 抢所有权**：proposal/design/tasks/spec delta 只写 OpenSpec 规定格式；本 skill 自己的记录只放 change 下的 `letwork/` 子目录（项目级文档 glossary/ADR/principles 在 `openspec/letwork/` 根，跨 change 保留）。
+9. **语言**：与用户交流、journal、review 报告用中文；proposal/spec 等 OpenSpec 产物遵循项目 `openspec/config.yaml` 的 product language 约定（无约定则中文）。
 
 ## 快速恢复上下文
 

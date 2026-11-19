@@ -51,6 +51,10 @@ openspec new change <name> --description "<一句话>"
 
 CLI 不可用时按 openspec-cheats.md 手工建目录与 `.openspec.yaml`（`schema: spec-driven`、`created: <YYYY-MM-DD>`）。同时创建私有目录 `openspec/changes/<name>/letwork/`，从 templates 复制 journal.md，写入分析开始条目。
 
+## 2a-1. 设计模式/算法对齐（涉及模式或算法时强制）
+
+需求涉及算法或设计模式时（判定见 [design-alignment.md](design-alignment.md) 第 1 节），在预览中增加「设计选型」节：列 2–3 个候选模式/算法（解决什么问题、结构、代价）+ 推荐项，用户确认后当场落 ADR，再进入实现；用户未确认前不写实现类。纯 CRUD/简单改动不触发。
+
 ## 2a. 关联既存欠债（仅既存项目）
 
 若 `openspec/letwork/debt-backlog.md` 存在，在访谈收敛后、写预览前：按本次需求涉及的模块/文件匹配 DEFERRED 或 OPEN 条目，列出相关欠债询问用户是否本次一起修（这是用户的明确要求：相关联模块开发时一起改）。同一 change 内对同一条只问一次；用户仍选择暂缓就更新「上次回顾日期」，不纠缠。决定一起修的条目状态改 `FIXING-随<change>处理` 并纳入任务；不改代码的纯记录不影响绿色门禁。

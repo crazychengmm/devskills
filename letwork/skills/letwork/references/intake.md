@@ -50,4 +50,5 @@
 
 - 摸底不是重构许可：没有用户确认，只读调查 + 文档产出，不动业务代码。
 - 画像与台账是**项目级长期文档**（在 `openspec/letwork/` 下，不属于某个 change，随仓库提交）；多次进场只需增量更新。
+- 项目级不变原则放 `openspec/letwork/principles.md`（从 [templates/principles.md](../templates/principles.md) 初始化）：只放长期稳定的价值观/硬约束，具体技术选型走 ADR；skill 只读不覆盖，用户可随时修改。
 - 小项目（<10 个源文件）允许一页简版画像 + 口头问题清单，但台账文件仍要建立。

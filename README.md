@@ -108,6 +108,7 @@ rm ~/.claude/skills/letwork ~/.claude/skills/let-grill \
 
 ## 版本记录
 
+- letwork **v0.19.0**（2026-11-19）：事项清单/本地小版本提交、不变原则文件、设计模式算法先对齐后编码。
 - letwork **v0.18.0**（2026-11-05）：MCP 接入约定（serena/CBM 分工、可选增强、不替代门禁）。
 - letwork **v0.17.1**（2026-11-05）：阶段顺序 code→review→test，测试集中在代码写完后；提交门禁分编译绿/测试绿两档。
 - letwork **v0.17.0**（2026-11-05）：git 本地提交与远端推送两级强制确认、编译/测试不过禁止提交、pre-commit 钩子兜底、push 前再完整验证。

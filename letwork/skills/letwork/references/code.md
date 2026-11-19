@@ -30,6 +30,9 @@
 
 ## 3. 单任务循环
 
+> 骨架优先：涉及多实现/重复结构的功能，按 [design-alignment.md](design-alignment.md) 第 4 节，先写接口/抽象/模型/枚举与方法签名（保证编译通过），再写参考实现，最后复制同构实现并把重复逻辑抽到基类/工具，禁止复制粘贴后各自漂移。
+
+
 > 装有 serena / codebase-memory-mcp 等 MCP 时，符号核实与影响面查询优先用 MCP（分工与降级见 [mcp-integration.md](mcp-integration.md)）；编译/lint 门禁仍只认原生命令结果。
 
 
