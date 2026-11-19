@@ -118,4 +118,7 @@ Task: <组号.序号>
 
 ## 8. 全部任务完成
 
+### 测试车项目的远端约定
+用于验证 skill 的测试项目（如 v-* 命名的练习仓）**默认只做本地 git 提交，不推 GitHub、不主动建远端仓库**；只有明确是要交付/发布的真实项目才走 push 两级确认。判断不准时在开始前问清项目性质，不要默认所有仓库都要远端。
+
 tasks.md 全勾选、review 无 BLOCKER、`openspec validate --strict` 通过、账本一致后：先 retro 汇总，经用户同意执行 `openspec archive <name>`，归档后告知用户可自行 push（本 skill 永不 push）。
