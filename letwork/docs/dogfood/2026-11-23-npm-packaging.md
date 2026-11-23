@@ -21,3 +21,9 @@
 
 - `npm pack` 71 文件、无 .git；tgz 安装后 letwork-link 建出 10 个软链、版本正确。
 - 卸载清理仅在生命周期脚本被授权时自动执行，否则文档给出手动清理。
+
+## 真机补充（用户机器 npm 12.0.2）
+
+- git URL 安装在「git dep preparation」阶段以 `--global=false` 嵌套安装，`--dangerously-allow-all-scripts` 也无法授权其 postinstall（EALLOWSCRIPTS）——**git 路线统一要求安装后手动 `letwork-link`，文档已修正，不再宣称自动链接**。
+- 真机 tgz 路线验证成功：`npm pack` → `npm i -g tgz`（postinstall 仅 warning 不阻断）→ `letwork-link`，10 个软链改指 `/opt/homebrew/lib/node_modules/letwork-skill/`，`npm ls -g` 可见包。
+- `~/.npmrc` 的 allow-scripts 数组写法：`allow-scripts[]=<pkg>` 每行一个（保留原有 claude-code 条目）。

@@ -74,34 +74,30 @@ curl -fsSL https://openspec.dev/cli/install.sh | sh
 
 ### 2. 获取 skill 并安装（三选一）
 
-#### 方式 A：npm 从 GitHub 安装（推荐，不发布 npm registry）
-
-```bash
-# npm 12+ 默认拦截 git 安装与生命周期脚本，需要两个授权 flag
-npm install -g --allow-git=all --dangerously-allow-all-scripts \
-  github:crazychengmm/devskills
-```
-
-说明（npm 12 的安全默认值，实测于 npm 12.0.2）：
-
-- `--allow-git=all`：允许从 git 来源安装（否则报 EALLOWGIT）。
-- `--dangerously-allow-all-scripts`：允许 postinstall 自动建软链。不想开这个 flag 时，安装后手动执行一次 `letwork-link`（bin 命令，所有 npm 版本可用）：
-
-```bash
-npm install -g --allow-git=all github:crazychengmm/devskills
-letwork-link
-```
-
-- npm ≤10 环境生命周期脚本默认放行，第一条命令即可自动完成链接。
-- SSH 形式：`npm install -g git+ssh://git@github.com/crazychengmm/devskills.git`。
-
-#### 方式 B：本地 tgz 包（离线/内网）
+#### 方式 A：本地 tgz 包（npm 12 下最稳，离线/内网可用）
 
 ```bash
 # 在仓库根目录打包（package.json 在仓库根）
 npm pack
-npm install -g letwork-skill-*.tgz        # npm12 若拦截脚本，再执行 letwork-link
+npm install -g letwork-skill-*.tgz
+letwork-link        # npm 12 默认拦截 postinstall，用 bin 手动建软链（幂等）
 ```
+
+#### 方式 B：npm 从 GitHub 安装
+
+```bash
+# npm 12 需允许 git 来源；git 依赖准备阶段会拦截生命周期脚本（EALLOWSCRIPTS）
+npm install -g --allow-git=all github:crazychengmm/devskills
+letwork-link        # 必做：手动建立软链（各 npm 版本通用）
+```
+
+实测说明（npm 12.0.2）：
+
+- `--allow-git=all`：允许 git 来源，否则报 EALLOWGIT。
+- git 依赖在缓存中以**项目级嵌套安装**准备，postinstall 在该阶段无法被全局 flag 授权（即使 `--dangerously-allow-all-scripts` 也会 EALLOWSCRIPTS），因此 git 路线统一以 `letwork-link` 手动链接为准。
+- npm ≤10：生命周期脚本默认放行，安装即自动链接，`letwork-link` 仅作修复手段。
+- SSH 形式：`npm install -g --allow-git=all git+ssh://git@github.com/crazychengmm/devskills.git`。
+- 已把 letwork-skill 加入 `~/.npmrc` 的 allow-scripts 白名单时，tgz 安装可自动链接；未配置时按上面手动执行即可。
 
 #### 方式 C：克隆 + 安装脚本（开发模式）
 

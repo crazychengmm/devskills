@@ -10,18 +10,17 @@
 
 ## 30 秒安装（letwork 全套 10 个命令）
 
-### 方式一：npm（GitHub 源，不发 npm registry）
+### 方式一：npm（不发 npm registry，tgz 最稳）
 
 ```bash
-# npm 12+ 需要显式授权 git 来源与生命周期脚本
-npm install -g --allow-git=all --dangerously-allow-all-scripts \
-  github:crazychengmm/devskills
+# tgz（npm 12 下推荐，离线可用）
+npm pack && npm install -g letwork-skill-*.tgz && letwork-link
 
-# 若不放行生命周期脚本，安装后补一次手动链接（bin 命令，各 npm 版本通用）
+# GitHub 源（npm 12 需允许 git；git 准备阶段拦截生命周期，链接统一手动执行）
 npm install -g --allow-git=all github:crazychengmm/devskills && letwork-link
 ```
 
-离线环境用 tgz：仓库根 `npm pack` 后 `npm install -g letwork-skill-*.tgz`。
+`letwork-link` 是包提供的 bin，负责把 10 个 skill 软链到 `~/.claude/skills/`，幂等可重复执行。
 
 ### 方式二：git 克隆 + 安装脚本
 
