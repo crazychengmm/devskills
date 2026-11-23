@@ -26,8 +26,8 @@
 
 ## 2. 轴一：规范符合度
 
-- Read 冻结规范（`openspec/standards/common.md` + 涉及语言分册）；若该目录不完整（用户跳过过分册），在报告开头声明覆盖缺口。
-- 逐文件过 diff，按 checklist 核对；每条发现引用规则 ID（如 `J-NAMING-01`、`G-ERR-02`、`P-DOC-01`、`C-LOG-01`）。
+- Read 冻结规范（`openspec/standards/common.md` + 涉及语言分册 + `common-extension.md`，存在才读）；若该目录不完整（用户跳过过分册），在报告开头声明覆盖缺口。
+- 逐文件过 diff，按 checklist 核对；每条发现引用规则 ID（如 `J-NAMING-01`、`G-ERR-02`、`P-DOC-01`、`C-LOG-01`、补全规则 `CE-1`~`CE-5`）。CE-1（业务层宽 catch/吞原生异常）与 CE-2（null 返回错误语义）违反按 BLOCKER；CE-3/CE-4 按项目阈值核对，违反按 MAJOR。
 - 严重级别：BLOCKER（正确性/安全/数据风险、明确违反强制规则）、MAJOR（会埋坑的设计/可维护性问题）、MINOR（风格/局部优化）、INFO（提问与建议）。
 - 拿不准的规则冲突（场景无法同时满足两条）写 INFO 并给取舍建议，不擅自判违规。
 

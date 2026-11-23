@@ -20,8 +20,9 @@
    - Go → `go-uber.md`（Uber Go Style Guide checklist）
    - Python → `python-google.md`（Google Python Style Guide + PEP 8 checklist）
    - 任意语言都叠加 `common.md`
+   - 同时复制 `common-extension.md`（CE-1~CE-5 可读性补全，含自定义区，项目可改阈值/增删条目）
 2. **使用我自己的规范**：用户给文件路径或 URL；读取后转成统一 checklist 格式（规则名 + 一句话检查点 + 规则 ID），保存到 `openspec/standards/<lang>-custom.md`。
-3. **仅用通用规范 / 本次跳过规范门禁**：只复制 `common.md`，并在 standards/README.md 与 journal 记录用户的跳过决定（review 阶段会注明规范覆盖不全）。
+3. **仅用通用规范 / 本次跳过规范门禁**：只复制 `common.md`（可按需带 `common-extension.md`），并在 standards/README.md 与 journal 记录用户的跳过决定（review 阶段会注明规范覆盖不全）。
 
 选定后：
 - 复制文件到 `openspec/standards/`；写/更新 `openspec/standards/README.md`：每份规范的来源、版本或抓取日期、许可证链接、冻结日期、适用模块。
@@ -43,7 +44,7 @@
    - **依赖版本先查实**：写 pom.xml/go.mod/requirements 前从 Maven Central metadata、pkg.go.dev、PyPI JSON 确认真实最新版本与兼容性（典型暗坑：p3c-pmd 2.1.1 是 PMD6 内核，必须配 maven-pmd-plugin 3.13.x，插件 3.21+ 默认 PMD7 不兼容，见 [standards/java-p3c-setup.md](standards/java-p3c-setup.md)）。
    - **首次构建给足超时**：Maven/Gradle 首次运行要下载插件与依赖，命令超时设 5–10 分钟；预检阶段先验证制品仓库可达（如 `curl -sI https://repo1.maven.org`）。
 1. 复述任务与它覆盖的 requirement、验收场景；说明准备改哪些文件（先给计划，大改动等确认）。
-2. Read 冻结规范：`openspec/standards/common.md` + 对应语言分册；编码中实时遵守，规则 ID 可用于解释「为什么这么写」。
+2. Read 冻结规范：`openspec/standards/common.md` + 对应语言分册；若存在 `common-extension.md`（可读性补全 CE-1~CE-5：自定义异常/禁 null 返回/方法长度/嵌套层数）也必读，阈值以项目修改后的值为准。编码中实时遵守，规则 ID 可用于解释「为什么这么写」。
 3. 实现：只做当前任务范围内的改动；发现必须顺手改的相邻问题，先在 journal 记 `[PROBLEM]` 并询问是否另开任务，不夹带。
 4. 自检（默认顺序 code→review→test 下，本阶段门禁只到「编译通过」，不跑测试）：
    - **机械化检查（编译/构建级，零成本先跑）**——
