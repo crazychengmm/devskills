@@ -72,42 +72,63 @@ curl -fsSL https://openspec.dev/cli/install.sh | sh
 
 验证：`openspec --version`（应输出 ≥ 1.16）。
 
-### 2. 获取 skill 并安装
+### 2. 获取 skill 并安装（三选一）
+
+#### 方式 A：npm 从 GitHub 安装（推荐，不发布 npm registry）
 
 ```bash
-# 克隆（确保你的 SSH 公钥已加到 GitHub 账号；HTTPS 亦可）
+# npm 12+ 默认拦截 git 安装与生命周期脚本，需要两个授权 flag
+npm install -g --allow-git=all --dangerously-allow-all-scripts \
+  github:crazychengmm/devskills
+```
+
+说明（npm 12 的安全默认值，实测于 npm 12.0.2）：
+
+- `--allow-git=all`：允许从 git 来源安装（否则报 EALLOWGIT）。
+- `--dangerously-allow-all-scripts`：允许 postinstall 自动建软链。不想开这个 flag 时，安装后手动执行一次 `letwork-link`（bin 命令，所有 npm 版本可用）：
+
+```bash
+npm install -g --allow-git=all github:crazychengmm/devskills
+letwork-link
+```
+
+- npm ≤10 环境生命周期脚本默认放行，第一条命令即可自动完成链接。
+- SSH 形式：`npm install -g git+ssh://git@github.com/crazychengmm/devskills.git`。
+
+#### 方式 B：本地 tgz 包（离线/内网）
+
+```bash
+# 在仓库根目录打包（package.json 在仓库根）
+npm pack
+npm install -g letwork-skill-*.tgz        # npm12 若拦截脚本，再执行 letwork-link
+```
+
+#### 方式 C：克隆 + 安装脚本（开发模式）
+
+```bash
 git clone git@github.com:crazychengmm/devskills.git
-cd devskills/letwork
-
-# 一条脚本完成软链安装，并打印安装的版本号
-bash ports/claude/install.sh
+cd devskills
+bash letwork/ports/claude/install.sh
 ```
 
-输出示例：
+三种方式都把 `skills/*` 软链到 `~/.claude/skills/`，幂等可重复执行。
 
-```text
-✓ letwork v0.5.1 已安装
-  安装位置: ~/.claude/skills（9 个命令，软链模式）
-  生效方式: 新开 Claude Code 会话后输入 /let 验证补全
-```
-
-如果仓库已在本地（开发模式），重跑同一脚本即可，幂等安全。
-
-**只装部分命令**：软链是按目录独立的，不需要哪个就不链哪个。例如只想要评审和提交两步：
+**只装部分命令**：软链按目录独立，例如只想要评审和提交：
 
 ```bash
-ln -sfn "$PWD/skills/letwork"    "$HOME/.claude/skills/letwork"
-ln -sfn "$PWD/skills/let-review" "$HOME/.claude/skills/let-review"
-ln -sfn "$PWD/skills/let-commit" "$HOME/.claude/skills/let-commit"
+ln -sfn "$PWD/letwork/skills/letwork"    "$HOME/.claude/skills/letwork"
+ln -sfn "$PWD/letwork/skills/let-review" "$HOME/.claude/skills/let-review"
+ln -sfn "$PWD/letwork/skills/let-commit" "$HOME/.claude/skills/let-commit"
 ```
 
-> 注意：8 个 `/let-*` 命令都是薄包装，真正的规程在核心 `letwork` 里，所以任何 `/let-*` 都必须同时安装 `letwork`。
+> 9 个 `/let-*` 命令都是薄包装，真正的规程在核心 `letwork` 里，任何 `/let-*` 都必须同时安装 `letwork`。
 
 ### 3. 验证安装
 
 1. 新开一个 Claude Code 会话（软链在新会话被扫描）。
-2. 输入 `/let` 应能补全出 `/letworkstart`、`/let-analyze` 等 9 个命令。
+2. 输入 `/let` 应能补全出 `/let-grill`、`/letworkstart`、`/let-analyze` 等 10 个命令。
 3. 在任意 git 仓库内运行 `/letworkstart`，它会开始做启动检查与路由。
+4. npm 安装后若命令未出现（npm 12 拦截了 postinstall），执行一次 `letwork-link` 重建软链。
 
 ### 4. 确认版本、升级与卸载
 
@@ -115,8 +136,13 @@ ln -sfn "$PWD/skills/let-commit" "$HOME/.claude/skills/let-commit"
 # 确认本地安装的版本（版本号唯一事实源：核心 SKILL.md 的 frontmatter）
 grep '^version:' ~/.claude/skills/letwork/SKILL.md
 
-# 升级：拉取最新版后重跑安装脚本（软链不变时可省略），脚本会打印新版本号
+# 升级（git 克隆方式）：pull 后重跑脚本
 cd devskills && git pull && bash letwork/ports/claude/install.sh
+
+# 升级（npm GitHub 方式）：重新安装即可，npm12 加授权 flag
+npm install -g --allow-git=all --dangerously-allow-all-scripts github:crazychengmm/devskills
+# 若未授权生命周期脚本，升级后补一次手动链接
+letwork-link
 ```
 
 升级生效规则（解决「pull 了但好像没变」）：
@@ -124,8 +150,15 @@ cd devskills && git pull && bash letwork/ports/claude/install.sh
 - 软链指向仓库文件，`git pull` 后**磁盘内容立即更新**，无需重新建链；
 - 但**已经打开的会话可能持有旧内容**——升级后请**新开一个会话**再验证版本号；
 - 在会话中直接问「letwork 当前是什么版本」，agent 会读取 SKILL.md 顶部版本行回答。
-# 卸载：删除软链
-rm ~/.claude/skills/letwork ~/.claude/skills/letworkstart \
+
+```bash
+# 卸载（npm 安装）：npm12 默认不跑 preuninstall，先手动清软链再卸载
+letwork-link   # 记录当前链接位置后，删除 ~/.claude/skills/ 下 let* 软链
+npm uninstall -g letwork-skill
+
+# 卸载（git 克隆方式）：删除软链
+rm ~/.claude/skills/letwork ~/.claude/skills/let-grill \
+   ~/.claude/skills/letworkstart \
    ~/.claude/skills/let-analyze ~/.claude/skills/let-plan \
    ~/.claude/skills/let-code ~/.claude/skills/let-test \
    ~/.claude/skills/let-review ~/.claude/skills/let-commit \

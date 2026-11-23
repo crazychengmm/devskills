@@ -10,14 +10,27 @@
 
 ## 30 秒安装（letwork 全套 10 个命令）
 
+### 方式一：npm（GitHub 源，不发 npm registry）
+
+```bash
+# npm 12+ 需要显式授权 git 来源与生命周期脚本
+npm install -g --allow-git=all --dangerously-allow-all-scripts \
+  github:crazychengmm/devskills
+
+# 若不放行生命周期脚本，安装后补一次手动链接（bin 命令，各 npm 版本通用）
+npm install -g --allow-git=all github:crazychengmm/devskills && letwork-link
+```
+
+离线环境用 tgz：仓库根 `npm pack` 后 `npm install -g letwork-skill-*.tgz`。
+
+### 方式二：git 克隆 + 安装脚本
+
 前置：Claude Code、git；推荐安装 [OpenSpec](https://github.com/Fission-AI/OpenSpec) CLI（非必需，缺失时自动降级为手工维护产物）：
 
 ```bash
 # OpenSpec CLI 三选一（需要 Node ≥ 22.12；真实包名带 scope，裸 openspec 是占位假包）
 npm install -g @fission-ai/openspec@latest   # 或：brew install openspec
 ```
-
-克隆并安装：
 
 ```bash
 git clone git@github.com:crazychengmm/devskills.git ~/devskills

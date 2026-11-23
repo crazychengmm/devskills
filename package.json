@@ -1,0 +1,31 @@
+{
+  "name": "letwork-skill",
+  "version": "0.21.0",
+  "private": true,
+  "description": "OpenSpec-driven requirement-to-delivery workflow skills for Claude Code (GitHub/tarball install, not published to npm registry)",
+  "license": "MIT",
+  "os": ["darwin", "linux"],
+  "scripts": {
+    "postinstall": "bash letwork/scripts/npm-postinstall.sh",
+    "preuninstall": "bash letwork/scripts/npm-preuninstall.sh",
+    "link:skills": "bash letwork/scripts/npm-postinstall.sh"
+  },
+  "bin": {
+    "letwork-link": "letwork/scripts/letwork-link.sh"
+  },
+  "files": [
+    "letwork/skills/",
+    "letwork/scripts/",
+    "letwork/docs/",
+    "letwork/ports/",
+    "letwork/README.md"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/crazychengmm/devskills.git"
+  },
+  "keywords": ["claude-code", "skills", "openspec", "workflow"],
+  "engines": {
+    "node": ">=18"
+  }
+}
